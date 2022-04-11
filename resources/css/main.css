@@ -1,0 +1,142 @@
+.bg-image-auth {
+  /*background-image: url('/img/background.jpeg');*/
+  background-size: cover;
+}
+.max-w-sm {
+  max-width: 30rem;
+}
+.padding-left-100 {
+  padding-left: 100px;
+}
+.auth-logo {
+  height: 80px;
+}
+.text-blue {
+  color: #3696cd;
+}
+.inherit-text {
+  text-transform: inherit;
+}
+.items-flex-end {
+  justify-content: flex-end;
+}
+.position-relative {
+  position: relative;
+}
+.btn-round {
+  border-radius: 30px;
+}
+.shadow-btn {
+  min-width: 64px;
+  padding: 0 16px;
+  height: 36px;
+  border: 1px solid #efecec;
+  box-shadow: -4px 11px 30px #00000015;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  color: #000;
+}
+
+.v-application .primary {
+  background: linear-gradient(72.61deg, #4baed8 7.37%, #2854e6 108.56%);
+}
+.auth-page .form-group:not(.normal-form-group) {
+  border: 1px solid #dddddd87;
+  border-radius: 10px;
+  padding: 0 15px 10px !important;
+  /* box-shadow: -15px 27px 71px #00000010; */
+}
+.download-report-page .form-group:not(.normal-form-group) {
+  border: 1px solid #dddddd87;
+  border-radius: 10px;
+  padding: 0 15px 10px !important;
+  /* box-shadow: -15px 27px 71px #00000010; */
+}
+::v-deep .form-group {
+  border: 1px solid #dddddd87;
+  border-radius: 10px;
+  padding: 0 15px 10px !important;
+  /* box-shadow: -15px 27px 71px #00000010; */
+}
+::v-deep input.form-control {
+  border: none;
+  color: #000;
+  padding: 0;
+  height: 20px;
+  font-size: 16px;
+}
+::v-deep .form-group select {
+  border: none;
+  padding: 0;
+  height: 20px;
+}
+::v-deep .form-group label {
+  border: none;
+  padding: 0;
+  height: 20px;
+  font-size: 16px;
+  margin: 0;
+  padding-top: 10px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+@media (max-width: 767px) {
+  .auth-logo {
+    width: auto;
+  }
+  .auth-lang {
+    margin-top: 0;
+  }
+}
+@media (max-width: 680px) {
+  .padding-left-100 {
+    padding-left: 24px;
+  }
+  .v-application .px-10 {
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+  }
+  p {
+    margin: 0;
+  }
+  .v-input--selection-controls {
+    margin-top: 0px;
+  }
+  .v-application .pb-10 {
+    padding-bottom: 15px !important;
+  }
+  h1 {
+    font-size: 24px;
+  }
+  .form-group {
+    margin-bottom: 0.5rem;
+  }
+  label {
+    padding-top: 5px;
+  }
+  .v-application .mt-5 {
+    margin-top: 10px !important;
+  }
+  ::v-deep .rememder-btn label {
+    font-size: 13px;
+  }
+  .rememder-btn {
+    height: 32px;
+  }
+  .v-application a {
+    color: #1976d2;
+    font-size: 13px;
+  }
+  .max-w-md {
+    display: flex;
+    align-items: flex-end;
+  }
+  .min-h-screen {
+    align-items: flex-end !important;
+  }
+  .captcha {
+    margin: 0 !important;
+  }
+}

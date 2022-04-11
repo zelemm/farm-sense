@@ -1,0 +1,340 @@
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pagination Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used by the paginator library to build
+    | the simple pagination links. You are free to change them to anything
+    | you want to customize your views to better match your application.
+    |
+    */
+
+    'lang' => 'Language',
+    'message' => [
+        'this' => 'This',
+        'the' => 'The',
+        'to' => 'To',
+        'deleted' => 'has been deleted',
+        'restored' => 'has been restored',
+        'password_has_been_successfully_changed' => 'Password has been successfully changed.',
+        'the_old_password_is_invalid' => 'The old password is invalid.',
+        'confirm' => 'Are you sure you want to',
+        'conf_del' => 'Are you sure you want to delete this',
+        'conf_restore' => 'Are you sure you want to restore this',
+        'select_atleast_1' => 'Please select atleast 1',
+        'exam_has_been_successfully_saved' => 'Exam has been successfully saved',
+    ],
+    'heading' => [
+        'action' => 'Action',
+        'dashboard' => 'Dashboard',
+        'farm' => 'Farm',
+        'profile' => 'Profile',
+        'location1' => 'Search Location',
+        'details' => 'Details',
+
+        'user' => 'User',
+
+        'today' => 'Today',
+        'tomorrow' => 'Tomorrow',
+        'yesterday' => 'Yesterday',
+        'this_week' => 'This Week',
+        'last_week' => 'Last Week',
+        'this_month' => 'This Month',
+        'this_year' => 'This Year',
+
+        'canceled' => 'Cancelled',
+        'cancelled' => 'Cancelled',
+        'rejected' => 'Rejected',
+        'reject' => 'Reject',
+        'delete' => 'Delete',
+        'approved' => 'Approved',
+        'pending' => 'Pending',
+        'completed' => 'Completed',
+        'total' => 'Total',
+
+        'table' => 'Table',
+
+        'create' => 'Create',
+        'created' => 'Created',
+        'updated' => 'Updated',
+        'deleted' => 'Deleted',
+        'restored' => 'Restored',
+        'creation' => 'creation',
+        'updation' => 'updation',
+        'error_try' => ' error. Please try after sometime',
+
+        'status' => 'Status',
+        'files' => 'Files',
+
+        'type' => 'Type',
+        'path' => 'Path',
+        'params' => 'Params',
+        'created_at' => 'Created At',
+
+        'remarks' => 'Remarks',
+        'completed_remarks' => 'Completed Remarks',
+        'cancelled_remarks' => 'Cancelled Remarks',
+        'completed_date' => 'Completed Date',
+        'cancelled_date' => 'Cancelled Date',
+
+        'description' => 'Description',
+
+        'updated_at' => 'Updated At',
+        'updated_by' => 'Updated By',
+        'added_by' => 'Added By',
+
+        //
+        'active' => 'Active',
+
+        'id' => 'ID',
+
+        'file_name' => 'File Name',
+        'attach' => 'Attach',
+
+
+        'vendor' => 'Supplier',
+        'contacts' => 'Contacts',
+
+        'primary' => 'Primary',
+        'goods' => 'Goods',
+        'image' => 'Image',
+        'images' => 'Images',
+
+    ],
+
+    'button' => [
+        'edit' => 'Edit',
+        'create' => 'Create',
+        'update' => 'Update',
+        'delete' => 'Delete',
+        'restore' => 'Restore',
+        'remove' => 'Remove',
+        'back' => 'Back',
+        'save' => 'Save',
+        'cancel' => 'Cancel',
+        'confirm' => 'Confirm',
+        'agree' => 'Agree',
+        'reset' => 'Reset',
+        'view' => 'View',
+        'filter' => 'Filters',
+        'ok' => 'OK',
+        'close' => 'Close',
+        'save_changes' => 'Save Changes',
+        'generate' => 'Generate',
+        'download' => 'Download',
+        'complete' => 'Complete',
+        'search' => 'Search',
+        'accept' => 'Accept',
+        'reject' => 'Reject',
+        'accept_all' => 'Accept All',
+        'reject_all' => 'Reject All',
+        'approve' => 'Approve',
+        'make_active' => 'Make Active',
+        'make_draft' => 'Make Draft',
+        'make_inactive' => 'Make Inactive',
+        'adjusted' => 'Adjusted',
+        'add_new' => 'Add New',
+        'load_users' => 'Load User',
+        'view_details' => 'View Details',
+        'auth' => 'Auth',
+        'reauth' => 'Re-Auth',
+        'link_google' => 'Link Google'
+    ],
+    'button_module' => [
+        'profile' => 'Profile',
+        'update' => 'Update',
+        'delete' => 'Delete',
+        'restore' => 'Restore',
+        'select' => 'Select',
+    ],
+    'days' => [
+        'Monday' => 'Monday',
+        'Tuesday' => 'Tuesday',
+        'Wednesday' => 'Wednesday',
+        'Thursday' => 'Thursday',
+        'Friday' => 'Friday',
+        'Saturday' => 'Saturday',
+        'Sunday' => 'Sunday',
+    ],
+
+    'filter' => [
+        'table' => 'Table',
+        'reset_view' => 'Reset View',
+        'reset_filters' => 'Reset Filters',
+        'today' => 'Today',
+        'farms' => 'Farms',
+        'users' => 'Users',
+
+    ],
+
+    'user' => [
+        'delete' => 'Delete User',
+        'create' => 'Create User',
+        'edit' => 'Edit User',
+        'created' => 'User created',
+        'updated' => 'User updated',
+        'deleted' => 'User deleted',
+        'restored' => 'User restored',
+    ],
+
+    'files_lang' => [
+        'download' => 'Download file',
+        'delete' => 'Delete file',
+        'deleted' => 'File deleted',
+        'downloaded' => 'File downloaded',
+        'not_found' => 'File not found',
+    ],
+
+    'date_lang' => [
+        'no' => 'No Date',
+        'day' => 'Day',
+        'month' => 'Month',
+        'year' => 'Year',
+    ],
+
+    'month_label' => [
+        'jan' => 'Jan',
+        'feb' => 'Feb',
+        'mar' => 'Mar',
+        'apr' => 'Apr',
+        'may' => 'May',
+        'jun' => 'Jun',
+        'jul' => 'Jul',
+        'aug' => 'Aug',
+        'sep' => 'Sep',
+        'oct' => 'Oct',
+        'nov' => 'Nov',
+        'dec' => 'Dec',
+
+        'january' => 'January',
+        'february' => 'February',
+        'march' => 'March',
+        'april' => 'April',
+        'june' => 'June',
+        'july' => 'July',
+        'august' => 'August',
+        'september' => 'September',
+        'october' => 'October',
+        'november' => 'November',
+        'december' => 'December',
+    ],
+
+    'name' => 'Name',
+    'type' => 'Type',
+    'description' => 'Description',
+    'email' => 'Email',
+    'alter' => 'Change',
+    'password' => 'Password',
+    'confirm' => 'Confirm',
+    'confirm_password' => 'Confirm password',
+    'mobile' => 'Mobile',
+    'phone' => 'Phone',
+    'address' => 'Address',
+    'date' => 'Date',
+    'time' => 'Time',
+    'has_one_error' => 'There is one form error.',
+    'old_password' => 'Old password',
+    'success' => 'Success',
+    'comment' => 'Comment',
+    'error' => 'Error',
+    'details_user' => 'User Details',
+    'user_type' => 'User Type',
+    'setting' => 'Setting',
+    'create_by' => 'Create by',
+    'remarks' => 'Remarks',
+    'status' => 'Status',
+    'notes' => 'Notes',
+    'mac_id' => 'MAC Id',
+    'cattle_type' => 'Cattle Type',
+    'father_cow' => 'Father',
+    'mother_cow' => 'Mother',
+
+    'date_of_birth' => 'Date of Birth',
+    'date_of_death' => 'Date of Death',
+    'date_of_sell' => 'Date of Sale',
+
+    'sex' => 'Sex',
+    'weight' => 'Weight',
+    'casterated' => 'Casterated',
+    'breed' => 'Breed',
+    'vendor' => 'Vendor',
+    'arrival' => 'Arrival',
+
+    'sold_price' => 'Sold Price',
+    'purchase_price' => 'Purchase Price',
+    'google_map' => 'Map',
+    'api_key' => 'Google API Key',
+    'longitude' => 'Longitude',
+    'latitude' => 'Latitude',
+
+    'farm_lang' => [
+        'create' => 'Create farm',
+        'edit' => 'Edit farm',
+        'created' => 'Farm created',
+        'delete' => 'Delete farm',
+        'deleted' => 'Farm deleted',
+        'restored' => 'Farm restored',
+        'update' => 'Update farm',
+        'updated' => 'Farm updated',
+        'map_linked' => 'Map linked successfully to the address',
+        'link_failed' => 'Map linking failed.',
+        'auth_needed' => 'Google account needs to be authenticated',
+    ],
+
+    'cattle_lang' => [
+        'create' => 'Create Cattle',
+        'edit' => 'Edit Cattle',
+        'created' => 'Cattle created',
+        'delete' => 'Delete Cattle',
+        'deleted' => 'Cattle deleted',
+        'restored' => 'Cattle restored',
+        'update' => 'Update Cattle',
+        'updated' => 'Cattle updated',
+    ],
+
+    'farm_google_lang' => [
+        'create' => 'Create Farm Google',
+        'edit' => 'Edit Farm Google',
+        'created' => 'Farm Google created',
+        'delete' => 'Delete Farm Google',
+        'deleted' => 'Farm Google deleted',
+        'restored' => 'Farm Google restored',
+        'update' => 'Update Farm Google',
+        'updated' => 'Farm Google updated',
+        'not_found' => 'No active farm google found',
+        'auth_started' => 'Google Authentication Started',
+        'google_auth_error' => 'Google authentication failed',
+        'google_auth_success' => 'Google authentication success',
+        'auth_existing' => 'Google already authenticated',
+        'token_renewed' => 'Google token renewed',
+    ],
+
+    'farm_fence_lang' => [
+        'create' => 'Create Farm Fence',
+        'edit' => 'Edit Farm Fence',
+        'created' => 'Farm Fence created',
+        'delete' => 'Delete Farm Fence',
+        'deleted' => 'Farm Fence deleted',
+        'restored' => 'Farm Fence restored',
+        'update' => 'Update Farm Fence',
+        'updated' => 'Farm Fence updated',
+        'not_found' => 'No active farm fence found',
+    ],
+
+    'label' => 'Label',
+    'organisation_id' => 'Organisation Id',
+    'client_id' => 'Client Id',
+    'client_secret' => 'Client Secret',
+    'timezone' => 'Timezone',
+    'google_scopes' => 'Google Scopes',
+    'code' => 'Code',
+    'access_token' => 'Access Token',
+    'refresh_token' => 'Refresh Token',
+    'scope' => 'Scope',
+    'expires_in' => 'Expires In',
+
+];

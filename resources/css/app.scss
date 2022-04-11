@@ -1,0 +1,23 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,900&display=swap");
+
+/* Reset */
+@import "tailwindcss/dist/base.css";
+@import "reset";
+
+@import './materialdesignicons.min.css';
+
+/* Components */
+@import "tailwindcss/dist/components.css";
+@import "buttons";
+@import "form";
+
+/* Utilities */
+@import "tailwindcss/dist/utilities.css";
+/* CSS */
+// @import 'vue2-timepicker/dist/VueTimepicker.css';
+// @import "vue-multiselect/dist/vue-multiselect.min.css";
+@import 'custom.scss';
+@import 'page.scss';
+
+@import 'responsive.scss';
