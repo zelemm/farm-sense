@@ -73,6 +73,7 @@ Route::group(['prefix' => 'v1'], function() {
                 Route::delete('/{farm_fence}', [FarmFenceController::class, 'destroy']);
                 Route::put('/{farm_fence}/restore', [FarmFenceController::class, 'restore']);
                 Route::get('/{farm_fence}/auth', [FarmFenceController::class, 'auth']);
+                Route::get('/{farm_fence}/coordinates', [FarmFenceController::class, 'coordinates']);
             });
 
 

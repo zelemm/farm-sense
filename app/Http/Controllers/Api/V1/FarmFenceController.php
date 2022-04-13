@@ -11,6 +11,7 @@ use App\Http\Resources\FarmFence\FarmFenceListResource;
 
 
 use App\Models\FarmFence;
+use App\Models\FarmFenceCoordinates;
 use App\Services\V1\FarmFenceService;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,7 +41,7 @@ class FarmFenceController extends Controller
         }
 
         $sortColumns = [
-            'id', 'longitude', 'latitude', 'farm_name'
+            'id', 'label', 'farm_name'
         ];
 
         if (!in_array($orderBy, $sortColumns)) {
@@ -101,8 +102,8 @@ class FarmFenceController extends Controller
         $farmFence = FarmFence::create([
 
             'farm_id' => $request->farm_id,
-            'longitude' => $request->longitude,
-            'latitude' => $request->latitude,
+            'label' => $request->label,
+            'description' => $request->description,
 
             'added_by' => $auth_user->id,
             'updated_by' => $auth_user->id,
@@ -125,8 +126,8 @@ class FarmFenceController extends Controller
 
         $farmFence->update([
             'farm_id' => $request->farm_id,
-            'longitude' => $request->longitude,
-            'latitude' => $request->latitude,
+            'label' => $request->label,
+            'description' => $request->description,
 
             'updated_by' => $auth_user->id,
         ]);
@@ -143,7 +144,7 @@ class FarmFenceController extends Controller
     public function destroy($id)
     {
         $farmFence = FarmFence::withTrashed()->find($id);
-
+        $farmFence->coordinates()->delete();
         $farmFence->delete();
 
         return response()->json([
@@ -160,12 +161,25 @@ class FarmFenceController extends Controller
         $farmFence = FarmFence::withTrashed()->find($id);
 
         $farmFence->restore();
+        $farmFence->coordinates()->restore();
 
         return response()->json([
             'success' => true,
             'message' => __('form.farm_fence_lang.restored'),
             'data' => [
                 'farm_fence' => $farmFence->id,
+            ]
+        ]);
+    }
+
+    public function coordinates($id){
+        $coordinates = FarmFenceCoordinates::withTrashed()->where('farm_fence_id', $id)->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => __('form.farm_fence_lang.coordinate_fetched'),
+            'data' => [
+                'coordinates' => $coordinates,
             ]
         ]);
     }

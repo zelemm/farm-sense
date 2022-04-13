@@ -16,6 +16,10 @@ class FarmFence extends Model
         return $this->belongsTo(Farm::class);
     }
 
+    public function coordinates(){
+        return $this->hasMany(FarmFenceCoordinates::class);
+    }
+
     public function scopeFilter($query, array $filters)
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {

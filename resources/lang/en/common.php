@@ -126,6 +126,8 @@ return [
     'farm_details' => 'Farm Details',
     'cattle_details' => 'Cattle Details',
     'farm_google_details' => 'Farm Google Details',
+    'farm_fence_details' => 'Farm Fence Details',
+    'farm_fence_coordinates' => 'Farm Fence Co-ordinates',
     'cattle_deleted' => 'This cattle has been deleted.',
     'farm_google_deleted' => 'This farm google has been deleted.',
 ];

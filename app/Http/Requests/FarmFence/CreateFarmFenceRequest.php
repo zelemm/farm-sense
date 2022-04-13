@@ -32,8 +32,10 @@ class CreateFarmFenceRequest extends FormRequest
     {
         $rules = [
             'farm_id' => 'required|exists:farms,id',
-            'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
-            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
+            'label' => 'required|max:250',
+            'description' => 'nullable|max:500',
+//            'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+//            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
         ];
         return $rules;
 

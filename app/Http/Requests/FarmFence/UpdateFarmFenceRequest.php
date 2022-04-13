@@ -34,8 +34,8 @@ class UpdateFarmFenceRequest extends FormRequest
     {
         $rules = [
             'farm_id' => 'required|exists:farms,id',
-            'longitude' => 'required|max:250',
-            'latitude' => 'required',
+            'label' => 'required|max:250',
+            'description' => 'nullable|max:500',
         ];
 
         return $rules;

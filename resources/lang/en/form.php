@@ -323,6 +323,8 @@ return [
         'update' => 'Update Farm Fence',
         'updated' => 'Farm Fence updated',
         'not_found' => 'No active farm fence found',
+        'coordinate_fetched' => 'Coordinates fetched',
+        'add_coordinate' => 'Add Co-Ordinate',
     ],
 
     'label' => 'Label',
@@ -336,5 +338,6 @@ return [
     'refresh_token' => 'Refresh Token',
     'scope' => 'Scope',
     'expires_in' => 'Expires In',
+    'coordinates' => 'Co-Ordinates',
 
 ];

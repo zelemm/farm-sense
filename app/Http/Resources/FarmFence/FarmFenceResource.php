@@ -21,15 +21,10 @@ class FarmFenceResource extends JsonResource
             'id' => $this->id,
             'farm_id' => $this->farm_id,
             'farm' => $this->farm ? new FarmResource($this->farm) : [],
-            'longitude' => $this->longitude,
-            'latitude' => $this->latitude,
+            'label' => $this->label,
+            'description' => $this->description,
 
             'deleted_at' => $this->deleted_at,
         ];
-    }
-
-    public function getImagesLInk($images)
-    {
-        return (new CommonService())->getImageLink($images);
     }
 }

@@ -1,24 +1,22 @@
 <template>
   <v-app>
     <div>
-      <FarmGoogleForm :farm_google="farm_google" />
+      <FarmFenceForm :farm_fence="farm_fence" />
     </div>
   </v-app>
 </template>
 
 <script>
 export default {
-  metaInfo: { title: window.lang.get('form.farm_google_lang.create') },
+  metaInfo: { title: window.lang.get('form.farm_fence_lang.create') },
 
   components: {
-    FarmGoogleForm: () => import('./Form'),
+    FarmFenceForm: () => import('./Form'),
   },
 
  data() {
     return {
-      farm_google: {
-          status: 'Active',
-          timezone: 'Australia/Sydney',
+      farm_fence: {
       }
     }
   },
