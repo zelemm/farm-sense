@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\FarmFence\CreateFarmFenceCoordsRequest;
 use App\Http\Requests\FarmFence\CreateFarmFenceRequest;
+use App\Http\Requests\FarmFence\UpdateFarmFenceCoordsRequest;
 use App\Http\Requests\FarmFence\UpdateFarmFenceRequest;
 use App\Http\Resources\FarmFence\FarmFenceResource;
 use App\Http\Resources\FarmFence\FarmFenceListResource;
@@ -173,13 +175,79 @@ class FarmFenceController extends Controller
     }
 
     public function coordinates($id){
-        $coordinates = FarmFenceCoordinates::withTrashed()->where('farm_fence_id', $id)->get();
+        $farmFence = FarmFence::withTrashed()->find($id);
+        return $this->farmFenceService->getCoOrdinates($farmFence, request()->all());
+    }
+
+    public function storeCoords(CreateFarmFenceCoordsRequest $request){
+        $auth_user = Auth::user();
+        $farmFence = FarmFenceCoordinates::create([
+
+            'farm_fence_id' => $request->farm_fence_id,
+            'longitude' => $request->longitude,
+            'latitude' => $request->latitude,
+
+            'added_by' => $auth_user->id,
+            'updated_by' => $auth_user->id,
+        ]);
 
         return response()->json([
             'success' => true,
-            'message' => __('form.farm_fence_lang.coordinate_fetched'),
+            'message' => __('form.farm_fence_coords_lang.created'),
             'data' => [
-                'coordinates' => $coordinates,
+                'farm_fence_coords_id' => $farmFence->id,
+            ]
+        ]);
+    }
+
+    public function updateCoords(UpdateFarmFenceCoordsRequest $request, $id)
+    {
+        $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
+
+        $auth_user = Auth::user();
+
+        $farmFenceCoords->update([
+            'farm_fence_id' => $request->farm_fence_id,
+            'longitude' => $request->longitude,
+            'latitude' => $request->latitude,
+
+            'updated_by' => $auth_user->id,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('form.farm_fence_coords_lang.updated'),
+            'data' => [
+                'farm_fence_coords' => $farmFenceCoords->id,
+            ]
+        ]);
+    }
+
+    public function destroyCoords($id)
+    {
+        $farmFence = FarmFenceCoordinates::withTrashed()->find($id);
+        $farmFence->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => __('form.farm_fence_coords_lang.deleted'),
+            'data' => [
+                'farm_fence' => $farmFence->id,
+            ]
+        ]);
+    }
+
+    public function restoreCoords($id)
+    {
+        $farmFence = FarmFenceCoordinates::withTrashed()->find($id);
+
+        $farmFence->restore();
+
+        return response()->json([
+            'success' => true,
+            'message' => __('form.farm_fence_coords_lang.restored'),
+            'data' => [
+                'farm_fence' => $farmFence->id,
             ]
         ]);
     }

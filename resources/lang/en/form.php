@@ -327,6 +327,18 @@ return [
         'add_coordinate' => 'Add Co-Ordinate',
     ],
 
+    'farm_fence_coords_lang' => [
+        'create' => 'Create Fence Co-Ordinate',
+        'edit' => 'Edit Fence Co-Ordinate',
+        'created' => 'Fence Co-Ordinate created',
+        'delete' => 'Delete Fence Co-Ordinate',
+        'deleted' => 'Fence Co-Ordinate deleted',
+        'restored' => 'Fence Co-Ordinate restored',
+        'update' => 'Update Fence Co-Ordinate',
+        'updated' => 'Fence Co-Ordinate updated',
+        'not_found' => 'No active Fence Co-Ordinate found',
+    ],
+
     'label' => 'Label',
     'organisation_id' => 'Organisation Id',
     'client_id' => 'Client Id',

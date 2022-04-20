@@ -2,14 +2,59 @@
 
 namespace App\Services\V1;
 
+use App\Http\Resources\FarmFence\FarmFenceCoordinatesResource;
 use App\Models\Farm;
+use App\Models\FarmFence;
 use Google_Client;
+use Illuminate\Pagination\Paginator;
 
 class FarmFenceService
 {
 
     public function __construct()
     {
+    }
+
+    public function getCoOrdinates(FarmFence $farmFence, Array $queries)
+    {
+        Paginator::currentPageResolver(function() use ($queries) {
+            return data_get($queries, 'page', 1);
+        });
+
+        $orderBy = data_get($queries, 'sortBy');
+        $orderDir = data_get($queries, 'sortDesc');
+
+        if (array_search($orderDir, ['desc', 'asc']) === false) {
+            $orderDir = 'desc';
+        }
+
+        $sortColumns = [
+            'longitude', 'latitude', 'updated_by_name'
+        ];
+
+        if (!in_array($orderBy, $sortColumns)) {
+            $orderBy = 'longitude';
+        }
+
+        $filters = [
+            'search' => data_get($queries, 'search', null),
+            'trashed' => data_get($queries, 'trashed', null),
+        ];
+
+        $coords = $farmFence->coordinates()
+            ->select('farm_fence_coordinates.*', 'users.name as updated_by_name')
+            ->leftJoin('users', 'users.id', '=', 'farm_fence_coordinates.updated_by')
+            ->filter($filters)
+            ->orderBy($orderBy, $orderDir);
+
+        $coords = $coords->paginate(intval(data_get($queries, 'itemsPerPage', 10)));
+
+        return [
+            'data' => FarmFenceCoordinatesResource::collection($coords),
+            'meta' => [
+                'total' => $coords->total(),
+            ]
+        ];
     }
 
     /**

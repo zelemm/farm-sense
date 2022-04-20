@@ -20,4 +20,5 @@ return [
     'logout' => 'Sign out',
     'farm_google' => 'Farm Google',
     'farm_fence' => 'Farm Fence',
+    'farm_fence_coords' => 'Farm Fence Co-Ordinate'
 ];

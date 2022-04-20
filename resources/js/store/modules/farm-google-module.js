@@ -60,37 +60,37 @@ export default  {
 
     delete({commit}, farmGoogleId) {
       return new Promise((resolve, reject) => {
-          axios.delete(`/super_admin/farm_google/${farmGoogleId}`)
-              .then((res) => {
-                  resolve(res)
-              })
-              .catch((error) => {
-                  reject(error)
-              })
+        axios.delete(`/super_admin/farm_google/${farmGoogleId}`)
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
     },
 
     restore({commit}, farmGoogleId) {
       return new Promise((resolve, reject) => {
-          axios.put(`/super_admin/farm_google/${farmGoogleId}/restore`)
-              .then((res) => {
-                  resolve(res)
-              })
-              .catch((error) => {
-                  reject(error)
-              })
+        axios.put(`/super_admin/farm_google/${farmGoogleId}/restore`)
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
     },
 
     auth({commit}, farmGoogleId) {
       return new Promise((resolve, reject) => {
-          axios.get(`/super_admin/farm_google/${farmGoogleId}/auth`)
-              .then((res) => {
-                  resolve(res)
-              })
-              .catch((error) => {
-                  reject(error)
-              })
+        axios.get(`/super_admin/farm_google/${farmGoogleId}/auth`)
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
     },
 

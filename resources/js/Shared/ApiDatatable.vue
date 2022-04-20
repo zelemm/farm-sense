@@ -294,16 +294,17 @@
           <!-- end Farm Google actions -->
 
           <!-- Farm Fence actions -->
-          <template #item.farm_fence_actions="{item}">
-                  <v-btn
-                      v-if="item.latitude != '' && item.longitude != ''"
-                      width="40" height="30" min-width="30"
-                      @click="itemActionClicked('showGoogle', item)"
-                      @click.native.stop
-                      class="font-weight-bold text-capitalize mr-3 mb-3"
-                  >
-                      <v-icon size="20" color="blue" dark>mdi-google-maps</v-icon>
-                  </v-btn>
+          <template #item.farm_fence_coords_actions="{item}">
+              <v-btn
+                  v-if="item.latitude != '' && item.longitude != ''"
+                  width="40" height="30" min-width="30"
+                  @click="itemActionClicked('showGoogle', item)"
+                  @click.native.stop
+                  class="font-weight-bold text-capitalize mr-3 mb-3"
+              >
+                  <v-icon size="20" color="blue" dark>mdi-google-maps</v-icon>
+              </v-btn>
+
               <v-btn
                   :title="lang.get('form.button.update')"
                   width="40" height="30" min-width="30"

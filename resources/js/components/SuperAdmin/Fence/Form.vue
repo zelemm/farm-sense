@@ -99,6 +99,10 @@
                         :heading="lang.get('form.coordinates')"
                         filter-flex="flex-end"
                         :url="`/super_admin/farm_fence/${farm_fence.id}/coordinates`"
+                        @handleFenceEdit="handleGoogleFenceAdd"
+                        @openDeleteFenceItem="openDeleteFenceItem"
+                        @restoreFenceItem="restoreFenceItem"
+                        @showGoogle="showGoogle"
                       />
                     </div>
                   </div>
@@ -108,14 +112,13 @@
                       <v-btn
                         color="primary"
                         dark
-                        @click="addItem('people')"
+                        @click="handleGoogleFenceAdd()"
                       >
                         {{ 'form.farm_fence_lang.add_coordinate' | trans }}
                       </v-btn>
                     </div>
 
                     <div class="clearfix" />
-
                   </template>
                 </v-tab-item>
               </v-tabs>
@@ -137,22 +140,165 @@
         </div>
       </v-col>
     </v-row>
+    <div class="clearfix" />
+    <template v-if="farm_fence.id">
+      <v-row justify="center">
+        <v-dialog
+          v-model="isShowAddFenceModal"
+          max-width="1000"
+        >
+          <div class="card mb-0">
+            <v-btn
+              class="close-dialog-icon"
+              icon
+              :title="lang.get('form.button.close')"
+              @click.native="isShowAddFenceModal = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+
+            <div class="card-body">
+              <h5 class="card-title mt-0 mb-4 header-title">
+                {{ fenceData && fenceData.id ? 'form.button.update' : 'form.button.create' | trans }}
+                {{ 'menu.farm_fence_coords' | trans }}
+              </h5>
+
+              <form @submit.stop.prevent="submit">
+                <v-row class="mt-4">
+                  <v-col cols="12" md="6">
+                    <TextInput
+                      v-model="fenceData.latitude"
+                      :label="lang.get('form.latitude')"
+                      :errors="detailErrors.latitude"
+                      placeholder="(+/-)##.#########"
+                    />
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <TextInput
+                      v-model="fenceData.longitude"
+                      :label="lang.get('form.longitude')"
+                      :errors="detailErrors.longitude"
+                      placeholder="(+/-)##.#########"
+                    />
+                  </v-col>
+                </v-row>
+
+                <div class="flex-between flex-wrap w-full mt-4">
+                  <v-btn
+                    color="primary"
+                    class="btn-round"
+                    :loading="loadingSaveDetail"
+                    @click.native="saveFenceDetail"
+                  >
+                    {{ 'form.button.save' | trans }}
+                  </v-btn>
+                  <v-btn
+                    class="mr-2 text-none my-2 btn-round"
+                    elevation-0
+                    text
+                    @click.native="isShowAddFenceModal = false"
+                  >
+                    {{ 'common.no_back' | trans }}
+                  </v-btn>
+                </div>
+              </form>
+            </div>
+          </div>
+        </v-dialog>
+      </v-row>
+
+      <v-row justify="center">
+        <v-dialog
+          v-model="isShowDeleteFenceModal"
+          max-width="400"
+        >
+          <div class="card mb-0">
+            <v-btn
+              class="close-dialog-icon"
+              icon
+              :title="lang.get('form.button.close')"
+              @click.native="isShowDeleteFenceModal = false"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+
+            <div class="card-body">
+              <form @submit.stop.prevent="submit">
+                <v-row class="mt-4">
+                  <v-col cols="12" md="12">
+                    Really want to delete Fence co-ordinates with<br>
+                    <strong>lat:</strong> {{ fenceData.latitude }}<br>
+                    <strong>lng:</strong>: {{ fenceData.longitude }}
+                  </v-col>
+                </v-row>
+                <div class="flex-between flex-wrap w-full mt-4">
+                  <v-btn
+                    color="primary"
+                    class="btn-round"
+                    :loading="loadingSaveDetail"
+                    @click.native="deleteFenceDetail"
+                  >
+                    {{ 'form.button.confirm' | trans }}
+                  </v-btn>
+                  <v-btn
+                    class="mr-2 text-none my-2 btn-round"
+                    elevation-0
+                    text
+                    @click.native="isShowDeleteFenceModal = false"
+                  >
+                    {{ 'common.no_back' | trans }}
+                  </v-btn>
+                </div>
+              </form>
+            </div>
+          </div>
+        </v-dialog>
+      </v-row>
+      <v-row justify="center">
+        <v-dialog
+          v-if="googleMap.lat && googleMap.lng"
+          v-model="showGoogleMapDialog"
+          max-width="800"
+        >
+          <v-card class="google-map-dialog">
+            <v-card-title class="justify-between bg-blue-500 text-white">
+              <span class="headline_googlemap">{{ googleMap.farm_name }}, {{ googleMapAddress }}</span>
+              <v-btn
+                class="close-dialog-icon"
+                icon
+                :title="lang.get('form.button.close')"
+                @click.native="showGoogleMapDialog = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+
+            <v-card-text>
+              <google-map :location="googleMap" />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </v-row>
+    </template>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import Vue from "vue";
+import * as VueGoogleMaps from "vue2-google-maps";
 export default {
   name: 'FarmFenceForm',
   remember: 'form',
 
   components: {
-    Icon: () => import('@/Shared/Icon'),
+    ApiDatatable: () => import('@/Shared/ApiDatatable'),
     SelectInput: () => import('@/Common/Form/SelectInput'),
     TextAreaInput: () => import('@/Common/Form/TextAreaInput'),
     TextInput: () => import('@/Common/Form/TextInput'),
     TrashedMessage: () => import('@/Shared/TrashedMessage'),
     ApiSelect: () => import('@/Common/Form/ApiSelect'),
+    GoogleMap: () => import('@/Shared/GoogleMap'),
   },
 
   props: {
@@ -166,16 +312,31 @@ export default {
       loading: false,
       form: {
       },
+      fenceData: {
+          latitude: '',
+          longitude: '',
+          farm_fence_id: this.farm_fence.id
+      },
+      googleMap: {
+
+      },
+      detailErrors: {},
       photoPreview: null,
+      loadingSaveDetail: false,
+      isShowAddFenceModal: false,
+      isShowDeleteFenceModal: false,
+      showGoogleMapDialog: false,
     }
   },
   computed: {
     coordinateHeaders() {
       return [
           { text: this.lang.get('form.heading.id'), value: 'id' },
-          { text: this.lang.get('menu.longitude'), value: 'farm.longitude' },
           { text: this.lang.get('form.latitude'), value: 'latitude' },
-          { text: this.lang.get('form.created_at'), value: 'created_at' },
+          { text: this.lang.get('form.longitude'), value: 'longitude' },
+          { text: this.lang.get('form.heading.updated_by'), value: 'updated_by_name' },
+          { text: this.lang.get('form.heading.created_at'), value: 'created_at' },
+          { text: this.lang.get('form.heading.action'), value: 'farm_fence_coords_actions' },
       ]
     },
 
@@ -185,13 +346,8 @@ export default {
 
     profileError() {
       let locationFields = [
-        'label',
-        'organisation_id',
-        'farm_id',
-        'client_id',
-        'client_secret',
-        'scope',
-        'status',
+        'latitude',
+        'longitude',
       ]
 
       for (let field of locationFields) {
@@ -269,14 +425,103 @@ export default {
       if (confirm(`${lang.get('form.message.conf_restore')} ${lang.get('menu.farm_google')}?`)) {
         let _this = this
 
-        _this.$store.dispatch('farmGoogle/restore', _this.farm_google.id)
+        _this.$store.dispatch('farmFence/restore', _this.farm_fence.id)
           .then(() => {
-            _this.farm_google.deleted_at = null
+            _this.farm_fence.deleted_at = null
           })
           .catch(() => {})
       }
     },
+      handleGoogleFenceAdd(item) {
+          this.detailErrors = {}
+          this.isShowAddFenceModal = true
+          if(item){
+              this.fenceData = item
+          }
+          else{
+              this.fenceData = {
+                  latitude: '',
+                  longitude: '',
+              }
+          }
+          this.fenceData.farm_fence_id = this.farm_fence.id
+      },
+      openDeleteFenceItem(item){
+          this.fenceData = item
+          this.isShowDeleteFenceModal = true
+      },
+      deleteFenceDetail(){
+          if (!this.fenceData) return
 
+          let _this = this
+
+          _this.loadingSaveDetail = true
+          _this.detailErrors = {}
+
+          _this
+              .$store
+              .dispatch('farmFence/deleteCoords', _this.fenceData.id)
+              .then(() => {
+                  _this.loadingSaveDetail = false
+
+                  _this.isShowDeleteFenceModal = false
+                  _this.$refs.coordinateTable.getDataFromApi()
+              })
+              .catch(err => {
+                  _this.loadingSaveDetail = false
+
+                  if (err.response && err.response.data && err.response.data.errors) {
+                      _this.detailErrors = err.response.data.errors
+                  }
+              })
+      },
+      restoreFenceItem(item){
+          let _this = this
+          _this.loadingSaveDetail = true
+          _this.detailErrors = {}
+
+          this
+              .$store
+              .dispatch('farmFence/restoreCoords', item.id)
+              .then(() => {
+                  _this.loadingSaveDetail = false
+
+                  _this.isShowDeleteFenceModal = false
+                  _this.$refs.coordinateTable.getDataFromApi()
+              })
+              .catch(err => {
+                  _this.loadingSaveDetail = false
+
+                  if (err.response && err.response.data && err.response.data.errors) {
+                      _this.detailErrors = err.response.data.errors
+                  }
+              })
+      },
+      saveFenceDetail() {
+          if (!this.fenceData) return
+          let _this = this
+
+          _this.loadingSaveDetail = true
+          _this.detailErrors = {}
+
+          let url = _this.fenceData.id ? 'farmFence/updateCoords' : 'farmFence/createCoords'
+          _this
+              .$store
+              .dispatch(url, this.fenceData)
+              .then(() => {
+                  _this.loadingSaveDetail = false
+
+                  _this.isShowAddFenceModal = false
+                  _this.$refs.coordinateTable.getDataFromApi()
+              })
+              .catch(err => {
+                  _this.loadingSaveDetail = false
+
+                  if (err.response && err.response.data && err.response.data.errors) {
+                      _this.detailErrors = err.response.data.errors
+                  }
+              })
+      },
     getStatus() {
       this.loading = true
 
@@ -288,6 +533,20 @@ export default {
           this.loading = false
         })
     },
+      showGoogle(item) {
+          this.googleMap.lat = item.latitude
+          this.googleMap.lng = item.longitude
+          this.googleMap.farm_name = this.farm_fence.label
+          this.googleMap.farm_address = this.farm_fence.farm.address
+          this.googleMapAddress = this.farm_fence.farm.address
+          this.showGoogleMapDialog = true
+          Vue.use(VueGoogleMaps, {
+              load: {
+                  key: this.farm_fence.farm.api_key,
+                  libraries: "places" //necessary for places input
+              }
+          });
+      },
 
   },
 }

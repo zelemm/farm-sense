@@ -130,4 +130,5 @@ return [
     'farm_fence_coordinates' => 'Farm Fence Co-ordinates',
     'cattle_deleted' => 'This cattle has been deleted.',
     'farm_google_deleted' => 'This farm google has been deleted.',
+    'farm_fence_deleted' => 'This fence co-ordinate has been deleted.',
 ];

@@ -73,6 +73,14 @@ Route::group(['prefix' => 'v1'], function() {
                 Route::delete('/{farm_fence}', [FarmFenceController::class, 'destroy']);
                 Route::put('/{farm_fence}/restore', [FarmFenceController::class, 'restore']);
                 Route::get('/{farm_fence}/auth', [FarmFenceController::class, 'auth']);
+
+                Route::group(['prefix' => 'coordinate/'], function() {
+                    Route::post('/', [FarmFenceController::class, 'storeCoords']);
+                    Route::put('/{farm_fence}', [FarmFenceController::class, 'updateCoords']);
+                    Route::delete('/{farm_fence}', [FarmFenceController::class, 'destroyCoords']);
+                    Route::put('/{farm_fence}/restore', [FarmFenceController::class, 'restoreCoords']);
+                });
+
                 Route::get('/{farm_fence}/coordinates', [FarmFenceController::class, 'coordinates']);
             });
 
