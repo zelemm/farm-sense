@@ -49,6 +49,11 @@ export default [
         component: lazyLoading('SuperAdmin/Cattle/Edit'),
       },
       {
+        name: 'super_admin.cattle_location',
+        path: 'cattle_location',
+        component: lazyLoading('SuperAdmin/CattleLocation/Index'),
+      },
+      {
         name: 'super_admin.farm_google',
         path: 'farm_google',
         component: lazyLoading('SuperAdmin/Google/Index'),

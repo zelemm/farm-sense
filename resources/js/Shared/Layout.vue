@@ -265,6 +265,11 @@ export default {
                 icon: 'mdi-cow',
             },
             {
+                title: lang.get('menu.cattle_location'),
+                to: 'super_admin.cattle_location',
+                icon: 'mdi-map',
+            },
+            {
                 title: lang.get('menu.farm_google'),
                 to: 'super_admin.farm_google',
                 icon: 'mdi-google',

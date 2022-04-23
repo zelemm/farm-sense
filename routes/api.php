@@ -60,6 +60,10 @@ Route::group(['prefix' => 'v1'], function() {
                 Route::put('/{cattle}/restore', [CattleController::class, 'restore']);
             });
 
+            Route::group(['prefix' => 'cattle_location/'], function() {
+                Route::get('/', [CattleLocationController::class, 'index']);
+            });
+
             Route::group(['prefix' => 'farm_google/'], function() {
                 Route::get('/', [FarmGoogleController::class, 'index']);
                 Route::post('/', [FarmGoogleController::class, 'store']);

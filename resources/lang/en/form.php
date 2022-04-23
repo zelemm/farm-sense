@@ -365,4 +365,13 @@ return [
     'expires_in' => 'Expires In',
     'coordinates' => 'Co-Ordinates',
 
+    'green_zone' => 'Green Zone',
+    'purple_zone' => 'Purple Zone',
+    'orange_zone' => 'Orange Zone',
+    'red_zone' => 'Red Zone',
+    'grazing' => 'Grazing',
+    'sitting' => 'Sitting',
+    'standing' => 'Standing',
+    'location_date' => 'Date',
+
 ];

@@ -39,11 +39,12 @@ class CattleLocationController extends Controller
         }
 
         $sortColumns = [
-            'id', 'name', 'longitude', 'latitude'
+            'id', 'cattles.name', 'longitude', 'latitude'
         ];
 
         if (!in_array($orderBy, $sortColumns)) {
-            $orderBy = 'cattles.name';
+            $orderBy = 'cattle_locations.created_at';
+            $orderDir = 'desc';
         }
 
         $user = Auth::user();
