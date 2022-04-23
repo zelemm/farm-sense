@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\FarmsController;
 use App\Http\Controllers\Api\V1\CattleController;
 use App\Http\Controllers\Api\V1\FarmGoogleController;
 use App\Http\Controllers\Api\V1\FarmFenceController;
+use App\Http\Controllers\Api\V1\CattleLocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,10 @@ Route::group(['prefix' => 'v1'], function() {
     Route::post('/passwords/change', [AuthController::class, 'changePassword']);
 
     Route::group(['middleware' => ['auth:api']], function() {
+
+        //For storing location for cattle
+        Route::post('/cattle/location', [CattleLocationController::class, 'store']);
+
         // Users
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/profile', [UsersController::class, 'profile']);

@@ -10,4 +10,8 @@ class CattleLocation extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function cattle() {
+        return $this->belongsTo(Cattle::class);
+    }
 }

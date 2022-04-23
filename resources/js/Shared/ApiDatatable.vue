@@ -35,6 +35,21 @@
                 </v-icon>
             </v-btn>
         </div>
+        <div v-if="mapAdjust && datas.length > 0" xs3>
+            <v-btn
+                width="40"
+                height="30"
+                min-width="30"
+                color="indigo"
+                :title="lang.get('form.button.adjust_fence')"
+                @click="itemActionClicked('adjustFarmFence', datas)"
+                @click.native.stop
+            >
+                <v-icon size="20" color="#fff" dark>
+                    mdi-map
+                </v-icon>
+            </v-btn>
+        </div>
     </div>
 
     <div v-if="extra_result && extra_result.po_number">
@@ -418,6 +433,10 @@ export default {
       default: true,
     },
     showSampleTypeSelect: Boolean,
+    mapAdjust: {
+      type: Boolean,
+      default: false,
+    },
     showStatus: {
       type: Boolean,
       default: true,

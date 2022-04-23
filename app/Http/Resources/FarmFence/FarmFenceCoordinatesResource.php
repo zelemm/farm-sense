@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\FarmFence;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FarmFenceCoordinatesResource extends JsonResource
@@ -17,11 +18,12 @@ class FarmFenceCoordinatesResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'farm_fence_id' => $this->farm_fence_id,
             'longitude' => $this->longitude,
             'latitude' => $this->latitude,
             'updated_by_name' => $this->updated_by_name,
 
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at ? Carbon::parse($this->created_at)->format('Y-m-d') : '',
             'deleted_at' => $this->deleted_at,
         ];
     }

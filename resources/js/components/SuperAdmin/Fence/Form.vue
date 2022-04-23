@@ -93,6 +93,7 @@
                     <div class="card-body">
                       <ApiDatatable
                         ref="coordinateTable"
+                        :map-adjust="true"
                         :show-filter="true"
                         :show-status="false"
                         :headers="coordinateHeaders"
@@ -103,6 +104,7 @@
                         @openDeleteFenceItem="openDeleteFenceItem"
                         @restoreFenceItem="restoreFenceItem"
                         @showGoogle="showGoogle"
+                        @adjustFarmFence="adjustFarmFence"
                       />
                     </div>
                   </div>
@@ -279,6 +281,31 @@
           </v-card>
         </v-dialog>
       </v-row>
+
+      <v-row justify="center">
+        <v-dialog
+          v-model="showGoogleFenceDialog"
+          max-width="800"
+        >
+          <v-card class="google-map-dialog">
+            <v-card-title class="justify-between bg-blue-500 text-white">
+              <span class="headline_googlemap">{{ farm_fence.label }}</span>
+              <v-btn
+                class="close-dialog-icon"
+                icon
+                :title="lang.get('form.button.close')"
+                @click.native="showGoogleFenceDialog = false"
+              >
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+
+            <v-card-text>
+              <google-fence :location="fenceCoordinates" />
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </v-row>
     </template>
   </div>
 </template>
@@ -287,6 +314,7 @@
 import moment from 'moment'
 import Vue from "vue";
 import * as VueGoogleMaps from "vue2-google-maps";
+
 export default {
   name: 'FarmFenceForm',
   remember: 'form',
@@ -299,6 +327,7 @@ export default {
     TrashedMessage: () => import('@/Shared/TrashedMessage'),
     ApiSelect: () => import('@/Common/Form/ApiSelect'),
     GoogleMap: () => import('@/Shared/GoogleMap'),
+    GoogleFence: () => import('@/Shared/GoogleFence'),
   },
 
   props: {
@@ -320,12 +349,16 @@ export default {
       googleMap: {
 
       },
+      fenceCoordinates:[
+
+      ],
       detailErrors: {},
       photoPreview: null,
       loadingSaveDetail: false,
       isShowAddFenceModal: false,
       isShowDeleteFenceModal: false,
       showGoogleMapDialog: false,
+      showGoogleFenceDialog: false,
     }
   },
   computed: {
@@ -534,6 +567,7 @@ export default {
         })
     },
       showGoogle(item) {
+          this.loadingSaveDetail = true
           this.googleMap.lat = item.latitude
           this.googleMap.lng = item.longitude
           this.googleMap.farm_name = this.farm_fence.label
@@ -546,6 +580,21 @@ export default {
                   libraries: "places" //necessary for places input
               }
           });
+          this.loadingSaveDetail = false
+      },
+      adjustFarmFence(items) {
+        this.loadingSaveDetail = true
+        this.fenceCoordinates = items
+        if(this.fenceCoordinates && this.fenceCoordinates.length > 0){
+            this.showGoogleFenceDialog = true;
+            Vue.use(VueGoogleMaps, {
+                load: {
+                    key: this.farm_fence.farm.api_key,
+                    libraries: "places" //necessary for places input
+                }
+            });
+        }
+        this.loadingSaveDetail = false
       },
 
   },

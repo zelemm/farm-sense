@@ -142,7 +142,8 @@ return [
         'view_details' => 'View Details',
         'auth' => 'Auth',
         'reauth' => 'Re-Auth',
-        'link_google' => 'Link Google'
+        'link_google' => 'Link Google',
+        'adjust_fence' => 'Adjust Fence Co-Ordinate',
     ],
     'button_module' => [
         'profile' => 'Profile',
@@ -337,6 +338,18 @@ return [
         'update' => 'Update Fence Co-Ordinate',
         'updated' => 'Fence Co-Ordinate updated',
         'not_found' => 'No active Fence Co-Ordinate found',
+    ],
+
+    'cattle_location_lang' => [
+        'create' => 'Create Cattle Location',
+        'edit' => 'Edit Cattle Location',
+        'created' => 'Cattle Location created',
+        'delete' => 'Delete Cattle Location',
+        'deleted' => 'Cattle Location deleted',
+        'restored' => 'Cattle Location restored',
+        'update' => 'Update Cattle Location',
+        'updated' => 'Cattle Location updated',
+        'not_found' => 'No active Cattle Location found',
     ],
 
     'label' => 'Label',

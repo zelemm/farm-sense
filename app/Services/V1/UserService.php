@@ -21,6 +21,14 @@ class UserService
     protected $performed_by = 0;
 
     /**
+     * @return void
+     *
+     */
+    public function authenticateApiRequest($token){
+
+    }
+
+    /**
      * @param $performed_by
      * @return void
      */

@@ -28,7 +28,10 @@ class CreateCattleLocationsTable extends Migration
             $table->boolean('sitting')->nullable();
 
             $table->date('location_date')->nullable();
+
             $table->timestamps();
+            $table->integer('added_by')->nullable();
+            $table->integer('updated_by')->nullable();
         });
     }
 
