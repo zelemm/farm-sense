@@ -64,6 +64,7 @@ export default {
         }
         paths.push(path)
       }
+      console.log(paths)
       return paths
     },
   },
@@ -91,6 +92,8 @@ export default {
           continue
         }
         this.markers.push({lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)})
+          console.log(this.markers)
+          console.log(this.center)
       }
 
     },
