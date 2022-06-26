@@ -1,14 +1,14 @@
 <template>
   <div>
-    <gmap-map ref="map" :center="center" :zoom="12" map-type-id="terrain">
-      <gmap-polygon v-if="markers.length > 0" ref="polygon" :paths="markers" :editable="true"
+    <gmap-map ref="map" :center="center" :zoom="12" map-type-id="terrain" style="width:100%;  height: 400px;">
+      <gmap-polygon ref="polygon" :paths="markers" :editable="true"
                     @paths_changed="updateEdited($event)"
                     @rightclick="handleClickForDelete"
       />
     </gmap-map>
     <div>
-      <button @click="addPath()">Add Path</button>
-      <button @click="removePath()">Remove Path</button>
+      <v-btn @click="addPath()" class="success">Add Path</v-btn>
+      <v-btn @click="removePath()" class="error">Remove Path</v-btn>
     </div>
     <div>
       <textarea :value="polygonGeojson" style="width: 100%; height: 200px"
@@ -21,6 +21,7 @@
 
 <script>
 // import {gmapApi} from 'vue2-google-maps'
+import throttle from 'lodash/throttle'
 
 function closeLoop (path) {
   return path.concat(path.slice(0, 1))
@@ -64,20 +65,19 @@ export default {
         }
         paths.push(path)
       }
-      console.log(paths)
       return paths
     },
   },
   watch: {
-    // polygonPaths: _.throttle(function (markers) {
-    //   if (markers) {
-    //     this.markers = markers
-    //     this.polygonGeojson = JSON.stringify({
-    //       type: 'Polygon',
-    //       coordinates: this.markers.map(path => closeLoop(path.map(({lat, lng}) => [lng, lat]))),
-    //     }, null, 2)
-    //   }
-    // }, 1000),
+    polygonPaths: throttle(function (markers) {
+      if (markers) {
+        this.markers = markers
+        this.polygonGeojson = JSON.stringify({
+          type: 'Polygon',
+          coordinates: this.markers.map(path => closeLoop(path.map(({lat, lng}) => [lng, lat]))),
+        }, null, 2)
+      }
+    }, 1000),
   },
 
   mounted() {
