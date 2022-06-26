@@ -106,6 +106,8 @@ class CattleLocationController extends Controller
             'sitting' => $request->sitting,
 
             'location_date' => $request->location_date,
+            'added_by' => $auth_user->id,
+            'updated_by' => $auth_user->id,
         ]);
 
         return response()->json([

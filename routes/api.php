@@ -64,15 +64,15 @@ Route::group(['prefix' => 'v1'], function() {
                 Route::get('/', [CattleLocationController::class, 'index']);
             });
 
-            Route::group(['prefix' => 'farm_google/'], function() {
-                Route::get('/', [FarmGoogleController::class, 'index']);
-                Route::post('/', [FarmGoogleController::class, 'store']);
-                Route::get('/{farm_google}', [FarmGoogleController::class, 'show']);
-                Route::put('/{farm_google}', [FarmGoogleController::class, 'update']);
-                Route::delete('/{farm_google}', [FarmGoogleController::class, 'destroy']);
-                Route::put('/{farm_google}/restore', [FarmGoogleController::class, 'restore']);
-                Route::get('/{farm_google}/auth', [FarmGoogleController::class, 'auth']);
-            });
+//            Route::group(['prefix' => 'farm_google/'], function() {
+//                Route::get('/', [FarmGoogleController::class, 'index']);
+//                Route::post('/', [FarmGoogleController::class, 'store']);
+//                Route::get('/{farm_google}', [FarmGoogleController::class, 'show']);
+//                Route::put('/{farm_google}', [FarmGoogleController::class, 'update']);
+//                Route::delete('/{farm_google}', [FarmGoogleController::class, 'destroy']);
+//                Route::put('/{farm_google}/restore', [FarmGoogleController::class, 'restore']);
+//                Route::get('/{farm_google}/auth', [FarmGoogleController::class, 'auth']);
+//            });
 
             Route::group(['prefix' => 'farm_fence/'], function() {
                 Route::get('/', [FarmFenceController::class, 'index']);

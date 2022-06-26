@@ -269,11 +269,11 @@ export default {
                 to: 'super_admin.cattle_location',
                 icon: 'mdi-map',
             },
-            {
-                title: lang.get('menu.farm_google'),
-                to: 'super_admin.farm_google',
-                icon: 'mdi-google',
-            },
+            // {
+            //     title: lang.get('menu.farm_google'),
+            //     to: 'super_admin.farm_google',
+            //     icon: 'mdi-google',
+            // },
             {
                 title: lang.get('menu.farm_fence'),
                 to: 'super_admin.farm_fence',
