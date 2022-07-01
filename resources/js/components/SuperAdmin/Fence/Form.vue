@@ -109,19 +109,19 @@
                     </div>
                   </div>
 
-                  <template>
-                    <div class="py-4">
-                      <v-btn
-                        color="primary"
-                        dark
-                        @click="handleGoogleFenceAdd()"
-                      >
-                        {{ 'form.farm_fence_lang.add_coordinate' | trans }}
-                      </v-btn>
-                    </div>
+<!--                  <template>-->
+<!--                    <div class="py-4">-->
+<!--                      <v-btn-->
+<!--                        color="primary"-->
+<!--                        dark-->
+<!--                        @click="handleGoogleFenceAdd()"-->
+<!--                      >-->
+<!--                        {{ 'form.farm_fence_lang.add_coordinate' | trans }}-->
+<!--                      </v-btn>-->
+<!--                    </div>-->
 
-                    <div class="clearfix" />
-                  </template>
+<!--                    <div class="clearfix" />-->
+<!--                  </template>-->
                 </v-tab-item>
               </v-tabs>
 
@@ -289,7 +289,9 @@
         >
           <v-card class="google-map-dialog">
             <v-card-title class="justify-between bg-blue-500 text-white">
-              <span class="headline_googlemap">{{ farm_fence.label }}</span>
+              <span class="headline_googlemap">{{ farm_fence.label }}
+              <v-btn class="success" @click="saveFence()">Save Fence</v-btn>
+              </span>
               <v-btn
                 class="close-dialog-icon"
                 icon
@@ -301,7 +303,7 @@
             </v-card-title>
 
             <v-card-text>
-              <google-fence :location="fenceCoordinates" />
+              <google-fence :location="fenceCoordinates" v-model="fenceCoordinates" />
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -585,7 +587,7 @@ export default {
       adjustFarmFence(items) {
         this.loadingSaveDetail = true
         this.fenceCoordinates = items
-        if(this.fenceCoordinates && this.fenceCoordinates.length > 0){
+        if(this.fenceCoordinates && this.fenceCoordinates.length >= 0){
             this.showGoogleFenceDialog = true;
             Vue.use(VueGoogleMaps, {
                 load: {
@@ -595,6 +597,32 @@ export default {
             });
         }
         this.loadingSaveDetail = false
+      },
+
+      saveFence: function (){
+          if (!this.fenceCoordinates) return
+          let _this = this
+
+          _this.loadingSaveDetail = true
+          _this.detailErrors = {}
+          let url = 'farmFence/createCoords'
+          _this
+              .$store
+              .dispatch(url, {places:this.fenceCoordinates[0], farm_fence_id: _this.farm_fence.id})
+              .then(() => {
+                  _this.loadingSaveDetail = false
+
+                  _this.showGoogleFenceDialog = false
+                  _this.$refs.coordinateTable.getDataFromApi()
+              })
+              .catch(err => {
+                  _this.loadingSaveDetail = false
+
+                  if (err.response && err.response.data && err.response.data.errors) {
+                      _this.detailErrors = err.response.data.errors
+                  }
+              })
+
       },
 
   },

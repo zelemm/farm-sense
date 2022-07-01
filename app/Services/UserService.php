@@ -10,46 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
-    /**
-     * employee update user profile
-     * @param User $user
-     * @param array $data
-     * @return User
-     */
-    public function updateEmployee(User $user, Array $data)
-    {
-        $birthDate = data_get($data, 'birth_date') ?: data_get($data, 'dob');
-
-        $subscribe = true;
-
-        if (isset($data['subscribe'])) {
-            $subscribe = $data['subscribe'] ? true : false;
-        }
-
-        $user->update([
-            'name' => $data['name'],
-            'gender' => data_get($data, 'gender', UserGender::FEMALE),
-            'birth_date' => $birthDate ? Carbon::parse($birthDate)->format('Y-m-d 00:00:00') : null,
-            'owner' => data_get($data, 'owner', false),
-            'lang' => data_get($data, 'lang', 'pt'),
-            'subscribe' => $subscribe,
-            'updated_by' => Auth::user()->id
-        ]);
-
-        if ($user->employee) {
-            $user->employee->update([
-                'name' => $user->name,
-            ]);
-        }
-
-        $photo = data_get($data, 'photo_path');
-
-        if ($photo) {
-            $user->updateProfilePhoto($photo);
-        }
-
-        return $user;
-    }
 
     /**
      * Create user profile

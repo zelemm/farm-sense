@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\ChangePasswordRequest;
 use App\Http\Requests\Users\UpdateProfileRequest;
 use App\Http\Resources\UserProfileResource;
-use App\Http\Resources\V1\UserListResource;
 use App\Models\User;
-use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -16,11 +14,9 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
-    protected UserService $userService;
 
     public function __construct()
     {
-        $this->userService = new UserService;
     }
 
     public function changePassword(ChangePasswordRequest $request, User $user)
@@ -85,99 +81,4 @@ class UsersController extends Controller
         ]);
     }
 
-    /**
-     * remove a photo for user
-     * @param int $useId
-     * @return Response
-     */
-    public function destroyPhoto($useId)
-    {
-        $user = User::withTrashed()->findOrFail($useId);
-        $this->authorize('destroy-photo', $user);
-
-        $status = $user->deleteProfilePhoto();
-
-        return response()->json([
-            'success' => $status
-        ]);
-    }
-
-    public function getCertificates()
-    {
-        $user = Auth::user();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'certificates' => CertificatesResource::collection($user->certificates),
-            ],
-        ]);
-    }
-
-    public function userPing()
-    {
-        Auth::user()->update([
-            'is_online' => true,
-            'last_login_at' => now(),
-        ]);
-
-        return response()->json([]);
-    }
-
-    public function list()
-    {
-        Gate::authorize('material-users-list', User::class);
-        $roles = is_string(request()->roles) ? explode(',', request()->roles) : [];
-        $users = (new \App\Services\V1\UserService())->getUsersByRole($roles);
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'datas' => UserListResource::collection($users),
-            ],
-        ]);
-    }
-
-    public function switchRole()
-    {
-        $role = request()->role;
-
-        $user = Auth::user();
-
-        $role = Role::where('id', '!=', $user->role_id)
-            ->firstWhere('role', $role);
-
-        if ($role) {
-            $user->update([
-                'role_id' => $role->id,
-            ]);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => __('form.user.switch_success'),
-            'data' => [
-                'user' => new UserProfileResource($user),
-            ]
-        ]);
-    }
-
-    public function syncLocations(User $user)
-    {
-        $action = request()->action;
-        $locationIds = request()->location_ids;
-
-        if (is_array($locationIds) && count($locationIds)) {
-            if ($action == 'attach') {
-                $user->locations()->attach($locationIds);
-            } else {
-                $user->locations()->detach($locationIds);
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => __('form.user.locations_synced')
-        ]);
-    }
 }

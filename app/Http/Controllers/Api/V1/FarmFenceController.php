@@ -181,15 +181,30 @@ class FarmFenceController extends Controller
 
     public function storeCoords(CreateFarmFenceCoordsRequest $request){
         $auth_user = Auth::user();
-        $farmFence = FarmFenceCoordinates::create([
+        $farmFence = FarmFence::withTrashed()->find($request->farm_fence_id);
 
-            'farm_fence_id' => $request->farm_fence_id,
-            'longitude' => $request->longitude,
-            'latitude' => $request->latitude,
-
-            'added_by' => $auth_user->id,
-            'updated_by' => $auth_user->id,
-        ]);
+        // sync fence co-ordinate
+        $places = [];
+        if (count($request->places)) {
+            foreach($request->places as $place) {
+                if(data_get($place, 'lng', '') != '' && data_get($place, 'lat', '') != ''){
+                    $farmFence->coordinates()->updateOrCreate([
+                        'longitude' => data_get($place, 'lng'),
+                        'latitude' => data_get($place, 'lat'),
+                    ],[
+                        'added_by' => $auth_user->id,
+                        'updated_by' => $auth_user->id,
+                    ]);
+                }
+//                $places[] = [
+//                    'longitude' => data_get($place, 'lng'),
+//                    'latitude' => data_get($place, 'lat'),
+//                    'added_by' => $auth_user->id,
+//                    'updated_by' => $auth_user->id,
+//                ];
+            }
+//            $farmFence->coordinates()->sync($places);
+        }
 
         return response()->json([
             'success' => true,

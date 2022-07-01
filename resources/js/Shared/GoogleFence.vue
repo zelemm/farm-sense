@@ -7,14 +7,15 @@
       />
     </gmap-map>
     <div>
-      <v-btn @click="addPath()" class="success">Add Path</v-btn>
-      <v-btn @click="removePath()" class="error">Remove Path</v-btn>
+      <v-btn class="success" @click="addPath()">Add Path</v-btn>
+      <v-btn class="error" @click="removePath()">Remove Path</v-btn>
     </div>
     <div>
-      <textarea :value="polygonGeojson" style="width: 100%; height: 200px"
-                @input="readGeojson"
-      />
-      <div v-if="errorMessage">{{ errorMessage }}</div>
+      <TextAreaInput :value="polygonGeojson" :errors="errorMessage" label="Fence Cordinates" :readonly="true" :hidden="true" @input="readGeojson" />
+      <!--      <textarea :value="polygonGeojson" style="width: 100%; height: 200px"-->
+      <!--                @input="readGeojson"-->
+      <!--      />-->
+      <!--      <div v-if="errorMessage">{{ errorMessage }}</div>-->
     </div>
   </div>
 </template>
@@ -22,12 +23,14 @@
 <script>
 // import {gmapApi} from 'vue2-google-maps'
 import throttle from 'lodash/throttle'
+import TextAreaInput from '../Common/Form/TextAreaInput'
 
 function closeLoop (path) {
   return path.concat(path.slice(0, 1))
 }
 export default {
   name: 'GoogleFence',
+  components: {TextAreaInput},
   props: {
     location: {
       Type: Object,
@@ -41,8 +44,8 @@ export default {
       errorMessage: null,
       polygonGeojson: '',
       // default to montreal to keep it simple
-      // change this to whatever makes sense
-      center: { lat: 45.508, lng: -73.587 },
+      // change this to whatever makes sense -33.91408223110558,-33.871028, 151.020579
+      center: { lat: -33.871028, lng: 151.020579 },
       markers: [],
       infoWindow: {
         position: {lat: 0, lng: 0},
@@ -54,24 +57,33 @@ export default {
   },
   computed: {
     polygonPaths: function () {
-      if (!this.mvcPaths) return null
+      if (!this.markers) return null
 
       let paths = []
-      for (let i=0; i < this.mvcPaths.getLength(); i++) {
+      for (let i=0; i < this.markers.getLength(); i++) {
         let path = []
-        for (let j=0; j<this.mvcPaths.getAt(i).getLength(); j++) {
-          let point = this.mvcPaths.getAt(i).getAt(j)
+        for (let j=0; j<this.markers.getAt(i).getLength(); j++) {
+          let point = this.markers.getAt(i).getAt(j)
           path.push({lat: point.lat(), lng: point.lng()})
         }
         paths.push(path)
       }
       return paths
     },
+    iValue: {
+      get() {
+        return this.value
+      },
+      set(newValue) {
+        this.$emit('input', newValue)
+      },
+    },
   },
   watch: {
-    polygonPaths: throttle(function (markers) {
+    markers: throttle(function (markers) {
       if (markers) {
         this.markers = markers
+        this.iValue = this.markers
         this.polygonGeojson = JSON.stringify({
           type: 'Polygon',
           coordinates: this.markers.map(path => closeLoop(path.map(({lat, lng}) => [lng, lat]))),
@@ -86,16 +98,16 @@ export default {
 
   methods: {
     geolocate: function() {
+      let path = []
       for (let i = 0; i < this.location.length; i++) {
         if(i == 0){
           this.center = {lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)}
-          continue
+          // continue
         }
-        this.markers.push({lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)})
-          console.log(this.markers)
-          console.log(this.center)
+        path.push({lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)})
       }
-
+      this.markers = []
+      this.markers.push(path)
     },
     updateCenter: function (place) {
       this.center = {
@@ -113,7 +125,7 @@ export default {
       var southWest = bounds.getSouthWest()
       var center = bounds.getCenter()
       var degree = this.markers.length + 1
-      var f = Math.pow(0.66, degree)
+      var f = Math.pow(0.20, degree)
 
       // Draw a triangle. Use f to control the size of the triangle.
       // i.e., every time we add a path, we reduce the size of the triangle
@@ -122,7 +134,7 @@ export default {
         { lng: (1-f) * center.lng() + (f) * southWest.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
         { lng: (1-f) * center.lng() + (f) * northEast.lng(), lat: (1-f) * center.lat() + (f) * southWest.lat() },
       ]
-
+      this.markers = []
       this.markers.push(path)
     },
     removePath: function () {

@@ -35,7 +35,7 @@
                 </v-icon>
             </v-btn>
         </div>
-        <div v-if="mapAdjust && datas.length > 0" xs3>
+        <div v-if="mapAdjust && datas.length >= 0" xs3>
             <v-btn
                 width="40"
                 height="30"
@@ -320,41 +320,41 @@
                   <v-icon size="20" color="blue" dark>mdi-google-maps</v-icon>
               </v-btn>
 
-              <v-btn
-                  :title="lang.get('form.button.update')"
-                  width="40" height="30" min-width="30"
-                  class="success font-weight-bold text-capitalize mr-3 mb-3"
-                  @click="itemActionClicked('handleFenceEdit', item)"
-                  @click.native.stop
-              >
-                  <v-icon size="20" dark>
-                      mdi-pencil
-                  </v-icon>
-              </v-btn>
-              <v-btn
-                  v-if="!item.deleted_at"
-                  width="40"
-                  height="30" min-width="30" :title="lang.get('form.button.delete')"
-                  class="error mr-3 mb-3"
-                  @click="itemActionClicked('openDeleteFenceItem', item)"
-                  @click.native.stop
-              >
-                  <v-icon size="20" dark>
-                      mdi-delete
-                  </v-icon>
-              </v-btn>
-              <v-btn
-                  v-if="item.deleted_at"
-                  width="40"
-                  height="30" min-width="30" :title="lang.get('form.button.restore')"
-                  class="error mr-3 mb-3"
-                  @click="itemActionClicked('restoreFenceItem', item)"
-                  @click.native.stop
-              >
-                  <v-icon size="20" dark>
-                      mdi-restore
-                  </v-icon>
-              </v-btn>
+<!--              <v-btn-->
+<!--                  :title="lang.get('form.button.update')"-->
+<!--                  width="40" height="30" min-width="30"-->
+<!--                  class="success font-weight-bold text-capitalize mr-3 mb-3"-->
+<!--                  @click="itemActionClicked('handleFenceEdit', item)"-->
+<!--                  @click.native.stop-->
+<!--              >-->
+<!--                  <v-icon size="20" dark>-->
+<!--                      mdi-pencil-->
+<!--                  </v-icon>-->
+<!--              </v-btn>-->
+<!--              <v-btn-->
+<!--                  v-if="!item.deleted_at"-->
+<!--                  width="40"-->
+<!--                  height="30" min-width="30" :title="lang.get('form.button.delete')"-->
+<!--                  class="error mr-3 mb-3"-->
+<!--                  @click="itemActionClicked('openDeleteFenceItem', item)"-->
+<!--                  @click.native.stop-->
+<!--              >-->
+<!--                  <v-icon size="20" dark>-->
+<!--                      mdi-delete-->
+<!--                  </v-icon>-->
+<!--              </v-btn>-->
+<!--              <v-btn-->
+<!--                  v-if="item.deleted_at"-->
+<!--                  width="40"-->
+<!--                  height="30" min-width="30" :title="lang.get('form.button.restore')"-->
+<!--                  class="error mr-3 mb-3"-->
+<!--                  @click="itemActionClicked('restoreFenceItem', item)"-->
+<!--                  @click.native.stop-->
+<!--              >-->
+<!--                  <v-icon size="20" dark>-->
+<!--                      mdi-restore-->
+<!--                  </v-icon>-->
+<!--              </v-btn>-->
           </template>
           <!-- end Farm Fence actions -->
 
