@@ -13,16 +13,19 @@ use App\Http\Resources\FarmGoogle\FarmGoogleListResource;
 
 
 use App\Models\FarmGoogle;
+use App\Services\V1\CommonService;
 use App\Services\V1\FarmGoogleService;
 use Illuminate\Support\Facades\Auth;
 
 class FarmGoogleController extends Controller
 {
     protected FarmGoogleService $farmGoogleService;
+    protected CommonService $commonService;
 
     public function __construct()
     {
         $this->farmGoogleService = new FarmGoogleService;
+        $this->commonService = new CommonService;
     }
 
     /**
@@ -31,15 +34,7 @@ class FarmGoogleController extends Controller
      */
     public function index()
     {
-
-        $page = (int) \request('page') ?? 1;
-        $itemsPerPage = (int) \request('itemsPerPage') ?? 10;
-        $orderBy = (\request('sortBy'));
-        $orderDir = (\request('sortDesc'));
-
-        if (!in_array($orderDir, ['asc', 'desc'])) {
-            $orderDir = 'ASC';
-        }
+        [$page, $itemsPerPage, $orderBy, $orderDir] = $this->commonService->getPaginationHeader();
 
         $sortColumns = [
             'id', 'label', 'client_id', 'organisation_id'

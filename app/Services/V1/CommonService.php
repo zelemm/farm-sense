@@ -12,6 +12,18 @@ class CommonService
     {
     }
 
+    public function getPaginationHeader(){
+        $page = (int) \request('page') ?? 1;
+        $itemsPerPage = (int) \request('itemsPerPage') ?? 10;
+        $orderBy = (\request('sortBy'));
+        $orderDir = (\request('sortDesc'));
+
+        if (!in_array($orderDir, ['asc', 'desc'])) {
+            $orderDir = 'ASC';
+        }
+        return [$page, $itemsPerPage, $orderBy, $orderDir];
+    }
+
     /**
      * Create farm files
      */

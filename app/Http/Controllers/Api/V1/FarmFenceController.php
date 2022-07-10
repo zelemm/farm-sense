@@ -14,16 +14,19 @@ use App\Http\Resources\FarmFence\FarmFenceListResource;
 
 use App\Models\FarmFence;
 use App\Models\FarmFenceCoordinates;
+use App\Services\V1\CommonService;
 use App\Services\V1\FarmFenceService;
 use Illuminate\Support\Facades\Auth;
 
 class FarmFenceController extends Controller
 {
     protected FarmFenceService $farmFenceService;
+    protected CommonService $commonService;
 
     public function __construct()
     {
         $this->farmFenceService = new FarmFenceService;
+        $this->commonService = new CommonService;
     }
 
     /**
@@ -32,15 +35,7 @@ class FarmFenceController extends Controller
      */
     public function index()
     {
-
-        $page = (int) \request('page') ?? 1;
-        $itemsPerPage = (int) \request('itemsPerPage') ?? 10;
-        $orderBy = (\request('sortBy'));
-        $orderDir = (\request('sortDesc'));
-
-        if (!in_array($orderDir, ['asc', 'desc'])) {
-            $orderDir = 'ASC';
-        }
+        [$page, $itemsPerPage, $orderBy, $orderDir] = $this->commonService->getPaginationHeader();
 
         $sortColumns = [
             'id', 'label', 'farm_name'

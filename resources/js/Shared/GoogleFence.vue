@@ -50,7 +50,7 @@ export default {
       polygonGeojson: '',
       // default to montreal to keep it simple
       // change this to whatever makes sense -33.91408223110558,-33.871028, 151.020579
-      center: { lat: -33.871028, lng: 151.020579 },
+      center: { lat: -33.8697804, lng: 151.1919861 },
       markers: [],
       infoWindow: {
         position: {lat: 0, lng: 0},
@@ -95,16 +95,16 @@ export default {
   methods: {
     geolocate: function() {
       let path = []
-      let firstPath = null
+      // let firstPath = null
       for (let i = 0; i < this.location.length; i++) {
-        if(i == 0){
-          firstPath = {lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)}
-        }
+        // if(i == 0){
+        //   firstPath = {lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)}
+        // }
         path.push({lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)})
       }
-      if(firstPath != null){
-        path.push(firstPath)
-      }
+      // if(firstPath != null){
+      // path.push(firstPath)
+      // }
       this.markers = []
       if(path.length > 0)
         this.markers.push(path)

@@ -23,10 +23,12 @@ use Illuminate\Support\Facades\Auth;
 class CattleController extends Controller
 {
     protected CattleService $cattleService;
+    protected CommonService $commonService;
 
     public function __construct()
     {
         $this->cattleService = new CattleService;
+        $this->commonService = new CommonService;
     }
 
     /**
@@ -36,14 +38,7 @@ class CattleController extends Controller
     public function index()
     {
 
-        $page = (int) \request('page') ?? 1;
-        $itemsPerPage = (int) \request('itemsPerPage') ?? 10;
-        $orderBy = (\request('sortBy'));
-        $orderDir = (\request('sortDesc'));
-
-        if (!in_array($orderDir, ['asc', 'desc'])) {
-            $orderDir = 'ASC';
-        }
+        [$page, $itemsPerPage, $orderBy, $orderDir] = $this->commonService->getPaginationHeader();
 
         $sortColumns = [
             'id', 'name', 'phone', 'status'

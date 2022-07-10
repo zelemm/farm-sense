@@ -10,16 +10,19 @@ use App\Models\CattleLocation;
 use App\Services\V1\CattleLocationService;
 use App\Services\V1\CommonService;
 use Illuminate\Support\Facades\Auth;
-
 use App\Http\Requests\CattleLocation\CreateCattleLocationRequest;
+use Location\Coordinate;
+use Location\Polygon;
 
 class CattleLocationController extends Controller
 {
     protected CattleLocationService $cattleLocationService;
+    protected CommonService $commonService;
 
     public function __construct()
     {
         $this->cattleLocationService = new CattleLocationService;
+        $this->commonService = new CommonService;
     }
 
     /**
@@ -29,14 +32,7 @@ class CattleLocationController extends Controller
     public function index()
     {
 
-        $page = (int) \request('page') ?? 1;
-        $itemsPerPage = (int) \request('itemsPerPage') ?? 10;
-        $orderBy = (\request('sortBy'));
-        $orderDir = (\request('sortDesc'));
-
-        if (!in_array($orderDir, ['asc', 'desc'])) {
-            $orderDir = 'ASC';
-        }
+        [$page, $itemsPerPage, $orderBy, $orderDir] = $this->commonService->getPaginationHeader();
 
         $sortColumns = [
             'id', 'cattles.name', 'longitude', 'latitude'
@@ -109,6 +105,7 @@ class CattleLocationController extends Controller
             'added_by' => $auth_user->id,
             'updated_by' => $auth_user->id,
         ]);
+
 
         return response()->json([
             'success' => true,

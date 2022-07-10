@@ -16,10 +16,12 @@ use Illuminate\Support\Facades\Auth;
 class FarmsController extends Controller
 {
     protected FarmService $farmService;
+    protected CommonService $commonService;
 
     public function __construct()
     {
         $this->farmService = new FarmService;
+        $this->commonService = new CommonService;
     }
 
     /**
@@ -28,15 +30,7 @@ class FarmsController extends Controller
      */
     public function index()
     {
-
-        $page = (int) \request('page') ?? 1;
-        $itemsPerPage = (int) \request('itemsPerPage') ?? 10;
-        $orderBy = (\request('sortBy'));
-        $orderDir = (\request('sortDesc'));
-
-        if (!in_array($orderDir, ['asc', 'desc'])) {
-            $orderDir = 'ASC';
-        }
+        [$page, $itemsPerPage, $orderBy, $orderDir] = $this->commonService->getPaginationHeader();
 
         $sortColumns = [
             'id', 'name', 'phone', 'status'

@@ -20,7 +20,9 @@ class FarmFenceResource extends JsonResource
         return [
             'id' => $this->id,
             'farm_id' => $this->farm_id,
+
             'farm' => $this->farm ? new FarmResource($this->farm) : [],
+
             'label' => $this->label,
             'description' => $this->description,
 
