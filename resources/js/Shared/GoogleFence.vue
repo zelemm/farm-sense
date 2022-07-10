@@ -7,11 +7,12 @@
       />
     </gmap-map>
     <div>
-      <v-btn class="success" @click="addPath()">Add Path</v-btn>
+      <v-btn v-if="markers.length == 0" class="success" @click="addPath()">Add Path</v-btn>
+      <v-btn v-else class="success" @click="saveFence('saveFence')">Save Fence</v-btn>
       <v-btn class="error" @click="removePath()">Remove Path</v-btn>
     </div>
     <div>
-      <TextAreaInput :value="polygonGeojson" :errors="errorMessage" label="Fence Cordinates" :readonly="true" :hidden="true" @input="readGeojson" />
+      <TextAreaInput :value="polygonGeojson" :errors="errorMessage" label="Fence Cordinates" :readonly="true" :hidden="false" @input="readGeojson" />
       <!--      <textarea :value="polygonGeojson" style="width: 100%; height: 200px"-->
       <!--                @input="readGeojson"-->
       <!--      />-->
@@ -33,7 +34,11 @@ export default {
   components: {TextAreaInput},
   props: {
     location: {
-      Type: Object,
+      Type: [Object, Array],
+      default: null,
+    },
+    locationCenter: {
+      Type: [Object, Array],
       default: null,
     },
   },
@@ -70,20 +75,11 @@ export default {
       }
       return paths
     },
-    iValue: {
-      get() {
-        return this.value
-      },
-      set(newValue) {
-        this.$emit('input', newValue)
-      },
-    },
   },
   watch: {
     markers: throttle(function (markers) {
       if (markers) {
         this.markers = markers
-        this.iValue = this.markers
         this.polygonGeojson = JSON.stringify({
           type: 'Polygon',
           coordinates: this.markers.map(path => closeLoop(path.map(({lat, lng}) => [lng, lat]))),
@@ -99,15 +95,25 @@ export default {
   methods: {
     geolocate: function() {
       let path = []
+      let firstPath = null
       for (let i = 0; i < this.location.length; i++) {
         if(i == 0){
-          this.center = {lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)}
-          // continue
+          firstPath = {lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)}
         }
         path.push({lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)})
       }
+      if(firstPath != null){
+        path.push(firstPath)
+      }
       this.markers = []
-      this.markers.push(path)
+      if(path.length > 0)
+        this.markers.push(path)
+
+      //Set the Center
+      if(this.location_center && this.location_center.lat && this.location_center.lng){
+        this.center = this.location_center
+      }
+
     },
     updateCenter: function (place) {
       this.center = {
@@ -116,7 +122,16 @@ export default {
       }
     },
     updateEdited: function (mvcPaths) {
-      this.mvcPaths = mvcPaths
+      let paths = []
+      for (let i=0; i<mvcPaths.getLength(); i++) {
+        let path = []
+        for (let j=0; j<mvcPaths.getAt(i).getLength(); j++) {
+          let point = mvcPaths.getAt(i).getAt(j)
+          path.push({lat: point.lat(), lng: point.lng()})
+        }
+        paths.push(path)
+      }
+      this.markers = paths
     },
     addPath: function () {
       // obtain the bounds, so we can guess how big the polygon should be
@@ -125,7 +140,7 @@ export default {
       var southWest = bounds.getSouthWest()
       var center = bounds.getCenter()
       var degree = this.markers.length + 1
-      var f = Math.pow(0.20, degree)
+      var f = Math.pow(0.40, degree)
 
       // Draw a triangle. Use f to control the size of the triangle.
       // i.e., every time we add a path, we reduce the size of the triangle
@@ -162,6 +177,9 @@ export default {
       } catch (err) {
         this.errorMessage = err.message
       }
+    },
+    saveFence(action) {
+      this.$emit(action, this.markers, this.center)
     },
   },
 }

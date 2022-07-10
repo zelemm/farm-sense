@@ -32,7 +32,8 @@ class CreateFarmFenceCoordsRequest extends FormRequest
     {
         $rules = [
             'farm_fence_id' => 'required|exists:farms,id',
-            'places' => 'required|array'
+            'places' => 'required|array',
+            'center' => 'required|array'
         ];
 //        'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
 //            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],

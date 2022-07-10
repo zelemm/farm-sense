@@ -183,27 +183,26 @@ class FarmFenceController extends Controller
         $auth_user = Auth::user();
         $farmFence = FarmFence::withTrashed()->find($request->farm_fence_id);
 
+
+        $farmFence->update(['center_lat'=>data_get($request->center, 'lat'), 'center_lng'=>data_get($request->center, 'lng')]);
         // sync fence co-ordinate
         $places = [];
         if (count($request->places)) {
+            $farmFence->coordinates()->forceDelete();
             foreach($request->places as $place) {
                 if(data_get($place, 'lng', '') != '' && data_get($place, 'lat', '') != ''){
-                    $farmFence->coordinates()->updateOrCreate([
+                    $places[] = [
+                        'farm_fence_id' => $farmFence->id,
                         'longitude' => data_get($place, 'lng'),
                         'latitude' => data_get($place, 'lat'),
-                    ],[
+                        'created_at' => now(),
+                        'updated_at' => now(),
                         'added_by' => $auth_user->id,
                         'updated_by' => $auth_user->id,
-                    ]);
+                    ];
                 }
-//                $places[] = [
-//                    'longitude' => data_get($place, 'lng'),
-//                    'latitude' => data_get($place, 'lat'),
-//                    'added_by' => $auth_user->id,
-//                    'updated_by' => $auth_user->id,
-//                ];
             }
-//            $farmFence->coordinates()->sync($places);
+            FarmFenceCoordinates::insert($places);
         }
 
         return response()->json([

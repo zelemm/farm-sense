@@ -33,7 +33,7 @@ class FarmFenceService
         ];
 
         if (!in_array($orderBy, $sortColumns)) {
-            $orderBy = 'longitude';
+            $orderBy = 'id';
         }
 
         $filters = [

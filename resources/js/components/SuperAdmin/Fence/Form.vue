@@ -289,9 +289,7 @@
         >
           <v-card class="google-map-dialog">
             <v-card-title class="justify-between bg-blue-500 text-white">
-              <span class="headline_googlemap">{{ farm_fence.label }}
-              <v-btn class="success" @click="saveFence()">Save Fence</v-btn>
-              </span>
+              <span class="headline_googlemap">{{ farm_fence.label }}</span>
               <v-btn
                 class="close-dialog-icon"
                 icon
@@ -303,7 +301,9 @@
             </v-card-title>
 
             <v-card-text>
-              <google-fence :location="fenceCoordinates" v-model="fenceCoordinates" />
+              <google-fence v-model="fenceCoordinatesComp" :location="fenceCoordinates"
+                            :location_center="{lat:farm_fence.center_lat, lng:farm_fence.center_lng}"
+                            @saveFence="saveFence" />
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -351,9 +351,12 @@ export default {
       googleMap: {
 
       },
-      fenceCoordinates:[
+        fenceCoordinates:[
 
-      ],
+        ],
+        fenceCoordinatesComp:[
+
+        ],
       detailErrors: {},
       photoPreview: null,
       loadingSaveDetail: false,
@@ -366,12 +369,12 @@ export default {
   computed: {
     coordinateHeaders() {
       return [
-          { text: this.lang.get('form.heading.id'), value: 'id' },
-          { text: this.lang.get('form.latitude'), value: 'latitude' },
-          { text: this.lang.get('form.longitude'), value: 'longitude' },
-          { text: this.lang.get('form.heading.updated_by'), value: 'updated_by_name' },
-          { text: this.lang.get('form.heading.created_at'), value: 'created_at' },
-          { text: this.lang.get('form.heading.action'), value: 'farm_fence_coords_actions' },
+          { text: this.lang.get('form.heading.id'), value: 'id', sortable: false },
+          { text: this.lang.get('form.latitude'), value: 'latitude', sortable: false },
+          { text: this.lang.get('form.longitude'), value: 'longitude', sortable: false },
+          { text: this.lang.get('form.heading.updated_by'), value: 'updated_by_name', sortable: false },
+          { text: this.lang.get('form.heading.created_at'), value: 'created_at', sortable: false },
+          { text: this.lang.get('form.heading.action'), value: 'farm_fence_coords_actions', sortable: false },
       ]
     },
 
@@ -599,16 +602,22 @@ export default {
         this.loadingSaveDetail = false
       },
 
-      saveFence: function (){
-          if (!this.fenceCoordinates) return
+      saveFence: function (fenceCoordinatesComp, center){
+          console.log(fenceCoordinatesComp)
+          console.log(center)
+          if (!fenceCoordinatesComp || fenceCoordinatesComp.length == 0) return
           let _this = this
-
           _this.loadingSaveDetail = true
           _this.detailErrors = {}
+
+          if(fenceCoordinatesComp.length == 1){
+              fenceCoordinatesComp = fenceCoordinatesComp[0]
+          }
+
           let url = 'farmFence/createCoords'
           _this
               .$store
-              .dispatch(url, {places:this.fenceCoordinates[0], farm_fence_id: _this.farm_fence.id})
+              .dispatch(url, {places:fenceCoordinatesComp, center:{lat: center.lat, lng: center.lng}, farm_fence_id: _this.farm_fence.id})
               .then(() => {
                   _this.loadingSaveDetail = false
 
