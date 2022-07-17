@@ -228,9 +228,7 @@
               <form @submit.stop.prevent="submit">
                 <v-row class="mt-4">
                   <v-col cols="12" md="12">
-                    Really want to delete Fence co-ordinates with<br>
-                    <strong>lat:</strong> {{ fenceData.latitude }}<br>
-                    <strong>lng:</strong>: {{ fenceData.longitude }}
+                    Really want to delete Fence co-ordinates
                   </v-col>
                 </v-row>
                 <div class="flex-between flex-wrap w-full mt-4">
@@ -375,7 +373,7 @@ export default {
       return [
           { text: this.lang.get('form.heading.id'), value: 'id', sortable: false },
           { text: this.lang.get('form.center_point'), value: 'center_point', sortable: false },
-          { text: this.lang.get('form.fence_coordinates'), value: 'fence_coordinates', sortable: false },
+          // { text: this.lang.get('form.fence_coordinates'), value: 'fence_coordinates', sortable: false },
           { text: this.lang.get('form.heading.updated_by'), value: 'updated_by_name', sortable: false },
           { text: this.lang.get('form.heading.created_at'), value: 'created_at', sortable: false },
           { text: this.lang.get('form.heading.action'), value: 'farm_fence_coords_actions', sortable: false },
@@ -489,11 +487,11 @@ export default {
       this.fenceData.farm_fence_id = this.farm_fence.id
     },
     openDeleteFenceItem(item){
-      this.fenceData = item
+      this.farmFenceCoordinateId = item.id
       this.isShowDeleteFenceModal = true
     },
     deleteFenceDetail(){
-      if (!this.fenceData) return
+      if (!this.farmFenceCoordinateId) return
 
       let _this = this
 
@@ -502,7 +500,7 @@ export default {
 
       _this
           .$store
-          .dispatch('farmFence/deleteCoords', _this.fenceData.id)
+          .dispatch('farmFence/deleteCoords', _this.farmFenceCoordinateId)
           .then(() => {
               _this.loadingSaveDetail = false
 
