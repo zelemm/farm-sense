@@ -24,6 +24,20 @@ class CreateFarmFenceCoordsRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'places' => json_decode(request()->places, true),
+            'center' => json_decode(request()->center, true),
+        ]);
+    }
+
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -31,7 +45,7 @@ class CreateFarmFenceCoordsRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'farm_fence_id' => 'required|exists:farms,id',
+            'farm_fence_id' => 'required|exists:farm_fences,id',
             'places' => 'required|array',
             'center' => 'required|array'
         ];

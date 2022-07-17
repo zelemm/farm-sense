@@ -11,8 +11,6 @@ use App\Services\V1\CattleLocationService;
 use App\Services\V1\CommonService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CattleLocation\CreateCattleLocationRequest;
-use Location\Coordinate;
-use Location\Polygon;
 
 class CattleLocationController extends Controller
 {
@@ -114,6 +112,11 @@ class CattleLocationController extends Controller
                 'cattle_location_id' => $cattleLocation->id,
             ]
         ]);
+    }
+
+    public function testCoordinate(){
+        $cattle_obj = new CattleLocationService();
+        $cattle_obj->locateCoordinates(1, -33.871028, 151.020579);
     }
 
 }

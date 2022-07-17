@@ -42,7 +42,7 @@
                 min-width="30"
                 color="indigo"
                 :title="lang.get('form.button.adjust_fence')"
-                @click="itemActionClicked('adjustFarmFence', datas)"
+                @click="itemActionClicked('adjustFarmFence', null)"
                 @click.native.stop
             >
                 <v-icon size="20" color="#fff" dark>
@@ -94,69 +94,6 @@
             </div>
           </v-col>
 
-          <v-col v-if="customerFilter" cols="12" :lg="filterLg" md="4" sm="6">
-            <SelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.customer"
-              :items="customers || []"
-              :label="lang.get('form.filter.customers')"
-              :clearable="true"
-            />
-          </v-col>
-          <v-col v-if="serviceFilter" cols="12" :lg="filterLg" md="4" sm="6">
-            <SelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.service"
-              :items="services || []"
-              :label="lang.get('form.filter.services')"
-              :clearable="true"
-            />
-          </v-col>
-          <v-col v-if="servicesFilter" cols="12" :lg="filterLg" md="4" sm="6">
-            <MultipleSelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.services"
-              :items="services || []"
-              :label="lang.get('form.filter.services')"
-            />
-          </v-col>
-          <v-col v-if="staffFilter" cols="12" :lg="filterLg" md="4" sm="6">
-            <SelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.emp"
-              :items="employees || []"
-              :label="lang.get('form.filter.staffs')"
-              :clearable="true"
-            />
-          </v-col>
-          <v-col v-if="staffsFilter" cols="12" :lg="filterLg" md="4" sm="6">
-            <MultipleSelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.staffs"
-              :items="employees || []"
-              :label="lang.get('form.filter.staffs')"
-            />
-          </v-col>
-          <v-col v-if="locationFilter" cols="12" :lg="filterLg" md="4" sm="6">
-            <SelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.location"
-              :items="locations || []"
-              item-text="name"
-              item-value="id"
-              :label="lang.get('form.filter.locations')"
-              :clearable="true"
-            />
-          </v-col>
-          <v-col v-if="locationsFilter" cols="12" :lg="filterLg" md="4" sm="6">
-            <MultipleSelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.locations"
-              :items="locations || []"
-              :label="lang.get('form.filter.locations')"
-            />
-          </v-col>
-
           <v-col v-if="usersFilter" cols="12" :lg="filterLg" md="4" sm="6">
             <MultipleSelectInput
               class="mb-0 filter-form-group"
@@ -179,17 +116,6 @@
               ]"
               :label="lang.get('form.button.filter')"
               :clearable="true"
-            />
-          </v-col>
-          <v-col v-if="showSampleTypeSelect" cols="12" :lg="filterLg" md="4" sm="6">
-            <SelectInput
-              class="mb-0 filter-form-group"
-              v-model="form.sample_type"
-              :items="sampleTypes || []"
-              :label="lang.get('form.sample_type')"
-              :clearable="true"
-              item-text="name"
-              item-value="value"
             />
           </v-col>
           <v-col v-if="showStatus" cols="12" :lg="filterLg" md="4" sm="6">
@@ -257,6 +183,32 @@
           </tr>
         </template>
 
+          <!-- Start Farm google centers -->
+          <template #item.center_point="{item}">
+              <template v-if="item.center_point && item.center_point.lat && item.center_point.lng">
+                  <div>
+                      (<span>{{ item.center_point.lat }}</span>, <span>{{ item.center_point.lng }}</span>)
+                  </div>
+              </template>
+          </template>
+          <!-- end Farm google centers -->
+
+          <!-- Start Farm google fence coordinates -->
+          <template #item.fence_coordinates="{item}">
+              <template v-if="item.fence_coordinates && item.center_point.lat && item.center_point.lng">
+                  <v-chip
+                      v-for="(fence, index) in item.fence_coordinates"
+                      :key="index"
+                      class="mb-1"
+                      color="secondary"
+                      text-color="white"
+                  >
+                      (<span>{{ fence.lat }}</span>, <span>{{ fence.lng }}</span>)
+                  </v-chip>
+              </template>
+          </template>
+          <!-- end Farm google fence coordinates -->
+
           <!-- Farm Google link actions Start -->
           <template v-slot:item.google_map="{ item }">
               <template v-if="item.google_map != ''">
@@ -317,9 +269,9 @@
                   @click.native.stop
                   class="font-weight-bold text-capitalize mr-3 mb-3"
               >
-                  <v-icon size="20" color="blue" dark>mdi-google-maps</v-icon>
+                  <v-icon size="20" color="blue" dark>mdi-map</v-icon>
               </v-btn>
-
+<!--              mdi-google-maps-->
 <!--              <v-btn-->
 <!--                  :title="lang.get('form.button.update')"-->
 <!--                  width="40" height="30" min-width="30"-->
@@ -432,7 +384,6 @@ export default {
       type: Boolean,
       default: true,
     },
-    showSampleTypeSelect: Boolean,
     mapAdjust: {
       type: Boolean,
       default: false,
@@ -447,18 +398,7 @@ export default {
       default: true,
     },
     datesFilter: Boolean,
-    customerFilter: Boolean,
-    serviceFilter: Boolean,
-    staffFilter: Boolean,
-    locationFilter: Boolean,
-    servicesFilter: Boolean,
-    staffsFilter: Boolean,
-    locationsFilter: Boolean,
     usersFilter: Boolean,
-    customers: Array,
-    services: Array,
-    employees: Array,
-    locations: Array,
     users: Array,
     requestParams: String,
     rememberParams: {
@@ -502,12 +442,7 @@ export default {
       form: {
         search: null,
         trashed: null,
-        sample_type: null,
         status: null,
-        customer: null,
-        service: null,
-        emp: null,
-        location: null,
       },
       dateRange: this.datesFilter && this.defaultDates ? this.defaultDates : [
         moment().format('YYYY-MM-01'),
@@ -522,19 +457,6 @@ export default {
       loadingDeleteFile: null,
       actions: [],
       selectedData: [],
-      sampleTypes: [
-        { value: 'Escovilhão nasal', name: window.lang.get('form.sample_types.swab') },
-        { value: 'Sangue', name: window.lang.get('form.sample_types.swab1') },
-        { value: 'Saliva', name: window.lang.get('form.sample_types.saliva') },
-        { value: 'escarro', name: window.lang.get('form.sample_types.type2') },
-        { value: 'aspirado', name: window.lang.get('form.sample_types.type3') },
-        { value: 'lavado', name: window.lang.get('form.sample_types.type4') },
-        { value: 'soro', name: window.lang.get('form.sample_types.type5') },
-        { value: 'plasma', name: window.lang.get('form.sample_types.type6') },
-        { value: 'liquor', name: window.lang.get('form.sample_types.type7') },
-        { value: 'sangue', name: window.lang.get('form.sample_types.type8') },
-        { value: 'urina', name: window.lang.get('form.sample_types.type9') },
-      ],
     }
   },
 
@@ -631,7 +553,7 @@ export default {
 
   created() {
     // set default timezone
-    moment.tz.setDefault("America/Belem")
+    moment.tz.setDefault("Australia/Sydney")
 
     // get query from local storage push to url
     if (this.rememberParams) {
@@ -650,11 +572,6 @@ export default {
       this.form.search = this.showSearch ? params.get('search') : this.form.search
       this.form.trashed = this.showFilter ? params.get('trashed') : this.form.trashed
       this.form.status = this.showStatus ? params.get('status') : this.form.status
-      this.form.sample_type = this.showSampleTypeSelect ? params.get('sample_type') : this.form.sample_type
-      this.form.customer = this.customerFilter && params.get('customer') ? parseInt(params.get('customer')) : this.form.customer
-      this.form.service = this.serviceFilter && params.get('service') ? parseInt(params.get('service')) : this.form.service
-      this.form.emp = this.staffFilter && params.get('emp') ? parseInt(params.get('emp')) : this.form.emp
-      this.form.location = this.locationFilter && params.get('location') ? parseInt(params.get('location')) : this.form.location
       this.dateRange = this.datesFilter && params.get('dates') ? params.get('dates').split(',') : this.dateRange
 
       if (this.datesFilter && !this.defaultDates && (!this.dateRange || !this.dateRange.length)) {

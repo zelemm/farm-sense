@@ -96,7 +96,7 @@ export default  {
 
     findCoords({commit}, id) {
       return new Promise((resolve, reject) => {
-        axios.get(`/super_admin/farm_fence/${id}`)
+        axios.get(`/super_admin/farm_fence/coordinate/${id}`)
           .then(res => {
             resolve(res.data.data.farm_fence)
           })
@@ -126,7 +126,7 @@ export default  {
       return new Promise((resolve, reject) => {
 
         axios
-          .put('/super_admin/farm_fence/coordinate/'+farmFenceForm.id, farmFenceForm, {
+          .post(`/super_admin/farm_fence/coordinate/${farmFenceForm.get('id')}`, farmFenceForm, {
             // headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then(res => {

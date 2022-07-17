@@ -103,7 +103,7 @@
                         @handleFenceEdit="handleGoogleFenceAdd"
                         @openDeleteFenceItem="openDeleteFenceItem"
                         @restoreFenceItem="restoreFenceItem"
-                        @showGoogle="showGoogle"
+                        @showGoogle="adjustFarmFenceEdit"
                         @adjustFarmFence="adjustFarmFence"
                       />
                     </div>
@@ -302,7 +302,7 @@
 
             <v-card-text>
               <google-fence v-model="fenceCoordinatesComp" :location="fenceCoordinates"
-                            :location_center="{lat:farm_fence.center_lat, lng:farm_fence.center_lng}"
+                            :locationCenter="fenceCoordinatesCenter"
                             @saveFence="saveFence" />
             </v-card-text>
           </v-card>
@@ -351,12 +351,16 @@ export default {
       googleMap: {
 
       },
+        farmFenceCoordinateId: null,
         fenceCoordinates:[
 
         ],
         fenceCoordinatesComp:[
 
         ],
+        fenceCoordinatesCenter: {
+
+        },
       detailErrors: {},
       photoPreview: null,
       loadingSaveDetail: false,
@@ -370,8 +374,8 @@ export default {
     coordinateHeaders() {
       return [
           { text: this.lang.get('form.heading.id'), value: 'id', sortable: false },
-          { text: this.lang.get('form.latitude'), value: 'latitude', sortable: false },
-          { text: this.lang.get('form.longitude'), value: 'longitude', sortable: false },
+          { text: this.lang.get('form.center_point'), value: 'center_point', sortable: false },
+          { text: this.lang.get('form.fence_coordinates'), value: 'fence_coordinates', sortable: false },
           { text: this.lang.get('form.heading.updated_by'), value: 'updated_by_name', sortable: false },
           { text: this.lang.get('form.heading.created_at'), value: 'created_at', sortable: false },
           { text: this.lang.get('form.heading.action'), value: 'farm_fence_coords_actions', sortable: false },
@@ -470,96 +474,96 @@ export default {
           .catch(() => {})
       }
     },
-      handleGoogleFenceAdd(item) {
-          this.detailErrors = {}
-          this.isShowAddFenceModal = true
-          if(item){
-              this.fenceData = item
-          }
-          else{
-              this.fenceData = {
-                  latitude: '',
-                  longitude: '',
-              }
-          }
-          this.fenceData.farm_fence_id = this.farm_fence.id
-      },
-      openDeleteFenceItem(item){
+    handleGoogleFenceAdd(item) {
+      this.detailErrors = {}
+      this.isShowAddFenceModal = true
+      if(item){
           this.fenceData = item
-          this.isShowDeleteFenceModal = true
-      },
-      deleteFenceDetail(){
-          if (!this.fenceData) return
+      }
+      else{
+          this.fenceData = {
+              latitude: '',
+              longitude: '',
+          }
+      }
+      this.fenceData.farm_fence_id = this.farm_fence.id
+    },
+    openDeleteFenceItem(item){
+      this.fenceData = item
+      this.isShowDeleteFenceModal = true
+    },
+    deleteFenceDetail(){
+      if (!this.fenceData) return
 
-          let _this = this
+      let _this = this
 
-          _this.loadingSaveDetail = true
-          _this.detailErrors = {}
+      _this.loadingSaveDetail = true
+      _this.detailErrors = {}
 
-          _this
-              .$store
-              .dispatch('farmFence/deleteCoords', _this.fenceData.id)
-              .then(() => {
-                  _this.loadingSaveDetail = false
+      _this
+          .$store
+          .dispatch('farmFence/deleteCoords', _this.fenceData.id)
+          .then(() => {
+              _this.loadingSaveDetail = false
 
-                  _this.isShowDeleteFenceModal = false
-                  _this.$refs.coordinateTable.getDataFromApi()
-              })
-              .catch(err => {
-                  _this.loadingSaveDetail = false
+              _this.isShowDeleteFenceModal = false
+              _this.$refs.coordinateTable.getDataFromApi()
+          })
+          .catch(err => {
+              _this.loadingSaveDetail = false
 
-                  if (err.response && err.response.data && err.response.data.errors) {
-                      _this.detailErrors = err.response.data.errors
-                  }
-              })
-      },
-      restoreFenceItem(item){
-          let _this = this
-          _this.loadingSaveDetail = true
-          _this.detailErrors = {}
+              if (err.response && err.response.data && err.response.data.errors) {
+                  _this.detailErrors = err.response.data.errors
+              }
+          })
+    },
+    restoreFenceItem(item){
+      let _this = this
+      _this.loadingSaveDetail = true
+      _this.detailErrors = {}
 
-          this
-              .$store
-              .dispatch('farmFence/restoreCoords', item.id)
-              .then(() => {
-                  _this.loadingSaveDetail = false
+      this
+          .$store
+          .dispatch('farmFence/restoreCoords', item.id)
+          .then(() => {
+              _this.loadingSaveDetail = false
 
-                  _this.isShowDeleteFenceModal = false
-                  _this.$refs.coordinateTable.getDataFromApi()
-              })
-              .catch(err => {
-                  _this.loadingSaveDetail = false
+              _this.isShowDeleteFenceModal = false
+              _this.$refs.coordinateTable.getDataFromApi()
+          })
+          .catch(err => {
+              _this.loadingSaveDetail = false
 
-                  if (err.response && err.response.data && err.response.data.errors) {
-                      _this.detailErrors = err.response.data.errors
-                  }
-              })
-      },
-      saveFenceDetail() {
-          if (!this.fenceData) return
-          let _this = this
+              if (err.response && err.response.data && err.response.data.errors) {
+                  _this.detailErrors = err.response.data.errors
+              }
+          })
+    },
+    saveFenceDetail() {
+      if (!this.fenceData) return
+      let _this = this
 
-          _this.loadingSaveDetail = true
-          _this.detailErrors = {}
+      _this.loadingSaveDetail = true
+      _this.detailErrors = {}
 
-          let url = _this.fenceData.id ? 'farmFence/updateCoords' : 'farmFence/createCoords'
-          _this
-              .$store
-              .dispatch(url, this.fenceData)
-              .then(() => {
-                  _this.loadingSaveDetail = false
+      let url = _this.fenceData.id ? 'farmFence/updateCoords' : 'farmFence/createCoords'
+      _this
+          .$store
+          .dispatch(url, this.fenceData)
+          .then(() => {
+              _this.loadingSaveDetail = false
 
-                  _this.isShowAddFenceModal = false
-                  _this.$refs.coordinateTable.getDataFromApi()
-              })
-              .catch(err => {
-                  _this.loadingSaveDetail = false
+              _this.isShowAddFenceModal = false
+              _this.$refs.coordinateTable.getDataFromApi()
+          })
+          .catch(err => {
+              _this.loadingSaveDetail = false
 
-                  if (err.response && err.response.data && err.response.data.errors) {
-                      _this.detailErrors = err.response.data.errors
-                  }
-              })
-      },
+              if (err.response && err.response.data && err.response.data.errors) {
+                  _this.detailErrors = err.response.data.errors
+              }
+          })
+    },
     getStatus() {
       this.loading = true
 
@@ -571,25 +575,42 @@ export default {
           this.loading = false
         })
     },
-      showGoogle(item) {
-          this.loadingSaveDetail = true
-          this.googleMap.lat = item.latitude
-          this.googleMap.lng = item.longitude
-          this.googleMap.farm_name = this.farm_fence.label
-          this.googleMap.farm_address = this.farm_fence.farm.address
-          this.googleMapAddress = this.farm_fence.farm.address
-          this.showGoogleMapDialog = true
-          Vue.use(VueGoogleMaps, {
-              load: {
-                  key: this.farm_fence.farm.api_key,
-                  libraries: "places" //necessary for places input
-              }
-          });
-          this.loadingSaveDetail = false
-      },
-      adjustFarmFence(items) {
+    showGoogle(item) {
+      this.loadingSaveDetail = true
+      this.googleMap.lat = item.latitude
+      this.googleMap.lng = item.longitude
+      this.googleMap.farm_name = this.farm_fence.label
+      this.googleMap.farm_address = this.farm_fence.farm.address
+      this.googleMapAddress = this.farm_fence.farm.address
+      this.showGoogleMapDialog = true
+      Vue.use(VueGoogleMaps, {
+          load: {
+              key: this.farm_fence.farm.api_key,
+              libraries: "places" //necessary for places input
+          }
+      });
+      this.loadingSaveDetail = false
+    },
+    adjustFarmFenceEdit(items){
+      this.adjustFarmFence(items, items.id)
+    },
+    adjustFarmFence(items, farmFenceCoordinateId) {
         this.loadingSaveDetail = true
-        this.fenceCoordinates = items
+        if(items == null){
+            farmFenceCoordinateId = null
+        }
+        this.farmFenceCoordinateId = farmFenceCoordinateId
+
+        if(items == null){
+            this.fenceCoordinates = []
+            this.fenceCoordinatesComp = []
+            this.fenceCoordinatesCenter = { lat: this.farm_fence.farm.lat, lng: this.farm_fence.farm.lng }
+        }
+        else{
+            this.fenceCoordinates = items.fence_coordinates
+            this.fenceCoordinatesComp = items.fence_coordinates
+            this.fenceCoordinatesCenter = { lat: items.center_point.lat, lng: items.center_point.lng }
+        }
         if(this.fenceCoordinates && this.fenceCoordinates.length >= 0){
             this.showGoogleFenceDialog = true;
             Vue.use(VueGoogleMaps, {
@@ -600,39 +621,46 @@ export default {
             });
         }
         this.loadingSaveDetail = false
-      },
+    },
 
-      saveFence: function (fenceCoordinatesComp, center){
-          console.log(fenceCoordinatesComp)
-          console.log(center)
-          if (!fenceCoordinatesComp || fenceCoordinatesComp.length == 0) return
-          let _this = this
-          _this.loadingSaveDetail = true
-          _this.detailErrors = {}
+    saveFence: function (fenceCoordinatesComp, center){
+      if (!fenceCoordinatesComp || fenceCoordinatesComp.length == 0) return
+      let _this = this
+      _this.loadingSaveDetail = true
+      _this.detailErrors = {}
 
-          if(fenceCoordinatesComp.length == 1){
-              fenceCoordinatesComp = fenceCoordinatesComp[0]
-          }
+      if(fenceCoordinatesComp.length == 1){
+          fenceCoordinatesComp = fenceCoordinatesComp[0]
+      }
+      let formData = new FormData()
+        formData.append('places', JSON.stringify(fenceCoordinatesComp))
+        formData.append('center', JSON.stringify({lat: center.lat, lng: center.lng}))
+        formData.append('farm_fence_id', _this.farm_fence.id)
 
-          let url = 'farmFence/createCoords'
-          _this
-              .$store
-              .dispatch(url, {places:fenceCoordinatesComp, center:{lat: center.lat, lng: center.lng}, farm_fence_id: _this.farm_fence.id})
-              .then(() => {
-                  _this.loadingSaveDetail = false
+      if (_this.farmFenceCoordinateId) {
+          formData.append('id', _this.farmFenceCoordinateId)
+          formData.append('_method', 'PUT')
+      }
 
-                  _this.showGoogleFenceDialog = false
-                  _this.$refs.coordinateTable.getDataFromApi()
-              })
-              .catch(err => {
-                  _this.loadingSaveDetail = false
+      let url = _this.farmFenceCoordinateId ? 'farmFence/updateCoords' : 'farmFence/createCoords'
+      _this
+          .$store
+          .dispatch(url, formData)
+          .then(() => {
+              _this.loadingSaveDetail = false
 
-                  if (err.response && err.response.data && err.response.data.errors) {
-                      _this.detailErrors = err.response.data.errors
-                  }
-              })
+              _this.showGoogleFenceDialog = false
+              _this.$refs.coordinateTable.getDataFromApi()
+          })
+          .catch(err => {
+              _this.loadingSaveDetail = false
 
-      },
+              if (err.response && err.response.data && err.response.data.errors) {
+                  _this.detailErrors = err.response.data.errors
+              }
+          })
+
+    },
 
   },
 }

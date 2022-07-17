@@ -16,8 +16,9 @@ class CreateFarmFenceCoordinatesTable extends Migration
         Schema::create('farm_fence_coordinates', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('farm_fence_id');
-            $table->string('longitude')->nullable();
-            $table->string('latitude')->nullable();
+
+            $table->json('center_point')->nullable();
+            $table->json('fence_coordinates')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

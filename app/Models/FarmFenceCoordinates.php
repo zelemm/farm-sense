@@ -12,6 +12,11 @@ class FarmFenceCoordinates extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'center_point' => 'array',
+        'fence_coordinates' => 'array',
+    ];
+
     public function fence(){
         return $this->belongsTo(FarmFence::class);
     }

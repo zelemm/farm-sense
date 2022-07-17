@@ -1,13 +1,13 @@
 <template>
   <div>
-    <gmap-map ref="map" :center="center" :zoom="12" map-type-id="terrain" style="width:100%;  height: 400px;">
-      <gmap-polygon ref="polygon" :paths="markers" :editable="true"
+    <gmap-map ref="map" :center="polygonCenter" :zoom="13" map-type-id="terrain" style="width:100%;  height: 400px;">
+      <gmap-polygon ref="polygon" :paths="polygonPaths" :editable="true"
                     @paths_changed="updateEdited($event)"
                     @rightclick="handleClickForDelete"
       />
     </gmap-map>
     <div>
-      <v-btn v-if="markers.length == 0" class="success" @click="addPath()">Add Path</v-btn>
+      <v-btn v-if="markers[0].length == 0" class="success" @click="addPath()">Add Path</v-btn>
       <v-btn v-else class="success" @click="saveFence('saveFence')">Save Fence</v-btn>
       <v-btn class="error" @click="removePath()">Remove Path</v-btn>
     </div>
@@ -50,8 +50,8 @@ export default {
       polygonGeojson: '',
       // default to montreal to keep it simple
       // change this to whatever makes sense -33.91408223110558,-33.871028, 151.020579
-      center: { lat: -33.8697804, lng: 151.1919861 },
-      markers: [],
+      center: this.locationCenter?this.locationCenter:{ lat: -33.8697804, lng: 151.1919861 },
+      markers: [this.location],
       infoWindow: {
         position: {lat: 0, lng: 0},
         open: false,
@@ -62,21 +62,44 @@ export default {
   },
   computed: {
     polygonPaths: function () {
-      if (!this.markers) return null
-
-      let paths = []
-      for (let i=0; i < this.markers.getLength(); i++) {
-        let path = []
-        for (let j=0; j<this.markers.getAt(i).getLength(); j++) {
-          let point = this.markers.getAt(i).getAt(j)
-          path.push({lat: point.lat(), lng: point.lng()})
-        }
-        paths.push(path)
+      let path = []
+      // let firstPath = null
+      for (let i = 0; i < this.markers[0].length; i++) {
+        path.push({lat: parseFloat(this.markers[0][i].lat), lng: parseFloat(this.markers[0][i].lng)})
       }
-      return paths
+      return [path]
+      // if (!this.markers) return null
+      //
+      // let paths = []
+      // for (let i=0; i < this.markers.getLength(); i++) {
+      //   let path = []
+      //   for (let j=0; j<this.markers.getAt(i).getLength(); j++) {
+      //     let point = this.markers.getAt(i).getAt(j)
+      //     path.push({lat: point.lat(), lng: point.lng()})
+      //   }
+      //   paths.push(path)
+      // }
+      // return paths
+    },
+    polygonCenter: function () {
+      //Set the Center
+      if(this.center && this.center.lat && this.center.lng){
+        return {lat: parseFloat(this.center.lat), lng: parseFloat(this.center.lng)}
+      }
+      return this.center
     },
   },
   watch: {
+    location: function(location){
+      this.markers = [location]
+    },
+    locationCenter: function(locationCenter){
+      if(locationCenter && locationCenter.lat && locationCenter.lng){
+        this.center = {lat: parseFloat(locationCenter.lat), lng: parseFloat(locationCenter.lng)}
+      }
+      else
+        this.center = { lat: -33.8697804, lng: 151.1919861 }
+    },
     markers: throttle(function (markers) {
       if (markers) {
         this.markers = markers
@@ -89,7 +112,7 @@ export default {
   },
 
   mounted() {
-    this.geolocate()
+    //this.geolocate()
   },
 
   methods: {
@@ -100,7 +123,7 @@ export default {
         // if(i == 0){
         //   firstPath = {lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)}
         // }
-        path.push({lat: parseFloat(this.location[i].latitude), lng: parseFloat(this.location[i].longitude)})
+        path.push({lat: parseFloat(this.location[i].lat), lng: parseFloat(this.location[i].lng)})
       }
       // if(firstPath != null){
       // path.push(firstPath)
@@ -110,8 +133,8 @@ export default {
         this.markers.push(path)
 
       //Set the Center
-      if(this.location_center && this.location_center.lat && this.location_center.lng){
-        this.center = this.location_center
+      if(this.locationCenter && this.locationCenter.lat && this.locationCenter.lng){
+        this.center = {lat: parseFloat(this.locationCenter.lat), lng: parseFloat(this.locationCenter.lng)}
       }
 
     },
@@ -141,6 +164,11 @@ export default {
       var center = bounds.getCenter()
       var degree = this.markers.length + 1
       var f = Math.pow(0.40, degree)
+
+      this.center = {
+        lat: center.lat(),
+        lng: center.lng(),
+      }
 
       // Draw a triangle. Use f to control the size of the triangle.
       // i.e., every time we add a path, we reduce the size of the triangle
@@ -179,7 +207,7 @@ export default {
       }
     },
     saveFence(action) {
-      this.$emit(action, this.markers, this.center)
+      this.$emit(action, this.markers[0], this.center)
     },
   },
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\FarmFence\CreateFarmFenceCoordsRequest;
 use App\Http\Requests\FarmFence\CreateFarmFenceRequest;
 use App\Http\Requests\FarmFence\UpdateFarmFenceCoordsRequest;
 use App\Http\Requests\FarmFence\UpdateFarmFenceRequest;
+use App\Http\Resources\FarmFence\FarmFenceCoordinatesResource;
 use App\Http\Resources\FarmFence\FarmFenceResource;
 use App\Http\Resources\FarmFence\FarmFenceListResource;
 
@@ -174,30 +175,35 @@ class FarmFenceController extends Controller
         return $this->farmFenceService->getCoOrdinates($farmFence, request()->all());
     }
 
+    public function formatPlacesWithCenter($fencePlaces, $center){
+        $places = [];
+        foreach($fencePlaces as $place) {
+            if(data_get($place, 'lng', '') != '' && data_get($place, 'lat', '') != ''){
+                $places[] = [
+                    'lng' => data_get($place, 'lng'),
+                    'lat' => data_get($place, 'lat'),
+                ];
+            }
+        }
+        $center_point = ['lat'=>data_get($center, 'lat'), 'lng'=>data_get($center, 'lng')];
+        return [$center_point, $places];
+    }
+
     public function storeCoords(CreateFarmFenceCoordsRequest $request){
         $auth_user = Auth::user();
         $farmFence = FarmFence::withTrashed()->find($request->farm_fence_id);
 
-
-        $farmFence->update(['center_lat'=>data_get($request->center, 'lat'), 'center_lng'=>data_get($request->center, 'lng')]);
         // sync fence co-ordinate
-        $places = [];
         if (count($request->places)) {
-            $farmFence->coordinates()->forceDelete();
-            foreach($request->places as $place) {
-                if(data_get($place, 'lng', '') != '' && data_get($place, 'lat', '') != ''){
-                    $places[] = [
-                        'farm_fence_id' => $farmFence->id,
-                        'longitude' => data_get($place, 'lng'),
-                        'latitude' => data_get($place, 'lat'),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                        'added_by' => $auth_user->id,
-                        'updated_by' => $auth_user->id,
-                    ];
-                }
-            }
-            FarmFenceCoordinates::insert($places);
+            [$center_point, $places] = $this->formatPlacesWithCenter($request->places, $request->center);
+            $fenceCoords = [
+                'farm_fence_id' => $farmFence->id,
+                'center_point' => $center_point,
+                'fence_coordinates' => $places,
+                'added_by' => $auth_user->id,
+                'updated_by' => $auth_user->id,
+            ];
+            FarmFenceCoordinates::create($fenceCoords);
         }
 
         return response()->json([
@@ -209,19 +215,34 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    public function showCoords($id)
+    {
+        $farmFenceCoords = FarmFenceCoordinates::withTrashed()->findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'farm_fence' => new FarmFenceCoordinatesResource($farmFenceCoords)
+            ]
+        ]);
+    }
+
     public function updateCoords(UpdateFarmFenceCoordsRequest $request, $id)
     {
         $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
 
         $auth_user = Auth::user();
 
-        $farmFenceCoords->update([
-            'farm_fence_id' => $request->farm_fence_id,
-            'longitude' => $request->longitude,
-            'latitude' => $request->latitude,
-
-            'updated_by' => $auth_user->id,
-        ]);
+        // sync fence co-ordinate
+        if (count($request->places)) {
+            [$center_point, $places] = $this->formatPlacesWithCenter($request->places, $request->center);
+            $fenceCoords = [
+                'center_point' => $center_point,
+                'fence_coordinates' => $places,
+                'updated_by' => $auth_user->id,
+            ];
+            $farmFenceCoords->update($fenceCoords);
+        }
 
         return response()->json([
             'success' => true,
@@ -234,29 +255,29 @@ class FarmFenceController extends Controller
 
     public function destroyCoords($id)
     {
-        $farmFence = FarmFenceCoordinates::withTrashed()->find($id);
-        $farmFence->delete();
+        $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
+        $farmFenceCoords->delete();
 
         return response()->json([
             'success' => true,
             'message' => __('form.farm_fence_coords_lang.deleted'),
             'data' => [
-                'farm_fence' => $farmFence->id,
+                'farm_fence' => $farmFenceCoords->id,
             ]
         ]);
     }
 
     public function restoreCoords($id)
     {
-        $farmFence = FarmFenceCoordinates::withTrashed()->find($id);
+        $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
 
-        $farmFence->restore();
+        $farmFenceCoords->restore();
 
         return response()->json([
             'success' => true,
             'message' => __('form.farm_fence_coords_lang.restored'),
             'data' => [
-                'farm_fence' => $farmFence->id,
+                'farm_fence' => $farmFenceCoords->id,
             ]
         ]);
     }

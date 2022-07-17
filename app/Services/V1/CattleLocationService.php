@@ -15,20 +15,23 @@ class CattleLocationService
     {
     }
 
-    public function locateCoordinates(Cattle $cattle, $lat, $lng){
+    public function locateCoordinates($cattle_id, $lat, $lng){
 
-        //find
+        //find cattle farm
+        $cattle = Cattle::find($cattle_id);
+        $fences = $cattle->farm->fences;
+        //need to check with each farm fence for all coordinates
+        foreach ($fences as $fence){
+            $coordinates = $fence->coordinates;
+            //create polygon object in order to find if the current co-ordinate is inside or outside the polygon of the fence
+            $geofence = new Polygon();
+            foreach ($coordinates as $coordinate){
+                $geofence->addPoint(new Coordinate($coordinate->latitude,$coordinate->longitude));
+            }
 
-        //create polygon object in order to find if the current co-ordinate is inside or outside the polygon of the fence
-        $geofence = new Polygon();
-
-        $geofence->addPoint(new Coordinate(-12.085870,-77.016261));
-        $geofence->addPoint(new Coordinate(-12.086373,-77.033813));
-        $geofence->addPoint(new Coordinate(-12.102823,-77.030938));
-        $geofence->addPoint(new Coordinate(-12.098669,-77.006476));
-
-        $outsidePoint = new Coordinate(-12.075452, -76.985079);
-        $insidePoint = new Coordinate(-12.092542, -77.021540);
+            $outsidePoint = new Coordinate($lat, $lng);
+            dd($geofence->contains($outsidePoint));
+        }
 
     }
 

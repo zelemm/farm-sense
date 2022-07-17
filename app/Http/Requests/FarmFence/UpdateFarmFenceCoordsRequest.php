@@ -24,6 +24,19 @@ class UpdateFarmFenceCoordsRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'places' => json_decode(request()->places, true),
+            'center' => json_decode(request()->center, true),
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -31,10 +44,12 @@ class UpdateFarmFenceCoordsRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'farm_fence_id' => 'required|exists:farms,id',
-            'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
-            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
+            'farm_fence_id' => 'required|exists:farm_fences,id',
+            'places' => 'required|array',
+            'center' => 'required|array'
         ];
+//            'latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
+//            'longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
         return $rules;
 
     }

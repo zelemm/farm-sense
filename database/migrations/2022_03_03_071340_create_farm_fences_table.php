@@ -19,8 +19,6 @@ class CreateFarmFencesTable extends Migration
             $table->bigInteger('farm_id');
             $table->string('label')->nullable();
             $table->string('description')->nullable();
-            $table->string('center_lng')->nullable();
-            $table->string('center_lat')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

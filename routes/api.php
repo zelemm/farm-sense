@@ -64,6 +64,10 @@ Route::group(['prefix' => 'v1'], function() {
                 Route::get('/', [CattleLocationController::class, 'index']);
             });
 
+            Route::group(['prefix' => 'cattle_location/test'], function() {
+                Route::get('/', [CattleLocationController::class, 'testCoordinate']);
+            });
+
 //            Route::group(['prefix' => 'farm_google/'], function() {
 //                Route::get('/', [FarmGoogleController::class, 'index']);
 //                Route::post('/', [FarmGoogleController::class, 'store']);
@@ -85,9 +89,10 @@ Route::group(['prefix' => 'v1'], function() {
 
                 Route::group(['prefix' => 'coordinate/'], function() {
                     Route::post('/', [FarmFenceController::class, 'storeCoords']);
-                    Route::put('/{farm_fence}', [FarmFenceController::class, 'updateCoords']);
-                    Route::delete('/{farm_fence}', [FarmFenceController::class, 'destroyCoords']);
-                    Route::put('/{farm_fence}/restore', [FarmFenceController::class, 'restoreCoords']);
+                    Route::get('/{farm_fence_coord}', [FarmFenceController::class, 'showCoords']);
+                    Route::put('/{farm_fence_coord}', [FarmFenceController::class, 'updateCoords']);
+                    Route::delete('/{farm_fence_coord}', [FarmFenceController::class, 'destroyCoords']);
+                    Route::put('/{farm_fence_coord}/restore', [FarmFenceController::class, 'restoreCoords']);
                 });
 
                 Route::get('/{farm_fence}/coordinates', [FarmFenceController::class, 'coordinates']);

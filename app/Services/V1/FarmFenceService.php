@@ -2,7 +2,7 @@
 
 namespace App\Services\V1;
 
-use App\Http\Resources\FarmFence\FarmFenceCoordinatesResource;
+use App\Http\Resources\FarmFence\FarmFenceCoordinatesListResource;
 use App\Models\Farm;
 use App\Models\FarmFence;
 use Google_Client;
@@ -50,7 +50,7 @@ class FarmFenceService
         $coords = $coords->paginate(intval(data_get($queries, 'itemsPerPage', 10)));
 
         return [
-            'data' => FarmFenceCoordinatesResource::collection($coords),
+            'data' => FarmFenceCoordinatesListResource::collection($coords),
             'meta' => [
                 'total' => $coords->total(),
             ]

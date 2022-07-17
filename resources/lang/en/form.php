@@ -373,5 +373,7 @@ return [
     'sitting' => 'Sitting',
     'standing' => 'Standing',
     'location_date' => 'Date',
+    'center_point' => 'Center Point',
+    'fence_coordinates' => 'Fence Coordinates',
 
 ];
