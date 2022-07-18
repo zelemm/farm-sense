@@ -1,7 +1,8 @@
 <template>
   <div>
-    <gmap-map ref="map" :center="polygonCenter" :zoom="13" map-type-id="terrain" style="width:100%;  height: 400px;">
+    <gmap-map ref="map" :center="polygonCenter" :zoom="13" map-type-id="satellite" style="width:100%;  height: 400px;">
       <gmap-polygon ref="polygon" :paths="polygonPaths" :editable="true"
+                    :options="options"
                     @paths_changed="updateEdited($event)"
                     @rightclick="handleClickForDelete"
       />
@@ -12,7 +13,7 @@
       <v-btn class="error" @click="removePath()">Remove Path</v-btn>
     </div>
     <div>
-      <TextAreaInput :value="polygonGeojson" :errors="errorMessage" label="Fence Cordinates" :readonly="true" :hidden="false" @input="readGeojson" />
+      <TextAreaInput :value="polygonGeojson" :errors="errorMessage" label="Fence Cordinates" :readonly="true" :hidden="true" @input="readGeojson" />
       <!--      <textarea :value="polygonGeojson" style="width: 100%; height: 200px"-->
       <!--                @input="readGeojson"-->
       <!--      />-->
@@ -41,6 +42,10 @@ export default {
       Type: [Object, Array],
       default: null,
     },
+    fenceColor:{
+      Type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -58,6 +63,7 @@ export default {
         template: '',
       },
       places: [],
+      options: { strokeColor: this.fenceColor ? this.fenceColor : '#123123' },
     }
   },
   computed: {
@@ -92,6 +98,7 @@ export default {
   watch: {
     location: function(location){
       this.markers = [location]
+      // this.$refs.polygon.setOptions({fillColor: '#123431', strokeWeight: 6.0})
     },
     locationCenter: function(locationCenter){
       if(locationCenter && locationCenter.lat && locationCenter.lng){
@@ -100,6 +107,9 @@ export default {
       else
         this.center = { lat: -33.8697804, lng: 151.1919861 }
     },
+    fenceColor: function (color){
+      this.options = { strokeColor: color ? color : '#123123' }
+    },
     markers: throttle(function (markers) {
       if (markers) {
         this.markers = markers
@@ -107,6 +117,7 @@ export default {
           type: 'Polygon',
           coordinates: this.markers.map(path => closeLoop(path.map(({lat, lng}) => [lng, lat]))),
         }, null, 2)
+        // this.$refs.polygon.setOptions({fillColor: '#123431', strokeWeight: 6.0})
       }
     }, 1000),
   },

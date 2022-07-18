@@ -290,7 +290,7 @@
 
             <v-card-text>
               <google-fence v-model="fenceCoordinatesComp" :location="fenceCoordinates"
-                            :location-center="fenceCoordinatesCenter"
+                            :location-center="fenceCoordinatesCenter" :fence-color="farmFenceCoordinateColor"
                             @saveFence="saveFence"
               />
             </v-card-text>
@@ -602,11 +602,13 @@ export default {
             this.fenceCoordinates = []
             this.fenceCoordinatesComp = []
             this.fenceCoordinatesCenter = { lat: this.farm_fence.farm.lat, lng: this.farm_fence.farm.lng }
+            this.farmFenceCoordinateColor = '#837083'
         }
         else{
             this.fenceCoordinates = items.fence_coordinates
             this.fenceCoordinatesComp = items.fence_coordinates
             this.fenceCoordinatesCenter = { lat: items.center_point.lat, lng: items.center_point.lng }
+            this.farmFenceCoordinateColor = items.fence_color
         }
         if(this.fenceCoordinates && this.fenceCoordinates.length >= 0){
             this.showGoogleFenceDialog = true;
