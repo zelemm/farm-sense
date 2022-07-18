@@ -620,9 +620,6 @@ export default {
         this.loadingSaveDetail = false
     },
     saveFenceCoordinateColor: function (){
-        console.log(this.farmFenceCoordinateColor)
-        console.log(this.farmFenceCoordinateId)
-        console.log(this.farmFenceCoordinateColor)
         if (!this.farmFenceCoordinateId || !this.farmFenceCoordinateColor) return
         let _this = this
         _this.loadingSaveDetail = true
