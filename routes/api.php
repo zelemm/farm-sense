@@ -93,6 +93,7 @@ Route::group(['prefix' => 'v1'], function() {
                     Route::put('/{farm_fence_coord}', [FarmFenceController::class, 'updateCoords']);
                     Route::delete('/{farm_fence_coord}', [FarmFenceController::class, 'destroyCoords']);
                     Route::put('/{farm_fence_coord}/restore', [FarmFenceController::class, 'restoreCoords']);
+                    Route::put('{farm_fence_coord}/fence_color', [FarmFenceController::class, 'updateCoordsColor']);
                 });
 
                 Route::get('/{farm_fence}/coordinates', [FarmFenceController::class, 'coordinates']);

@@ -193,6 +193,18 @@
           </template>
           <!-- end Farm google centers -->
 
+          <!-- Start Farm google fence coordinate color -->
+          <template #item.fence_color="{item}">
+              <template v-if="item.fence_color">
+                  <div>
+                      <v-badge v-if="item.fence_color" :color="item.fence_color"
+                               @click.native="itemActionClicked('openAddColorModal', item)"
+                      />
+                  </div>
+              </template>
+          </template>
+          <!-- end Farm google fence coordinate color -->
+
           <!-- Start Farm google fence coordinates -->
           <template #item.fence_coordinates="{item}">
               <template v-if="item.fence_coordinates && item.center_point.lat && item.center_point.lng">

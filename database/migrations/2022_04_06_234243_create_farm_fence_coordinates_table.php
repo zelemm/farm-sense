@@ -20,6 +20,8 @@ class CreateFarmFenceCoordinatesTable extends Migration
             $table->json('center_point')->nullable();
             $table->json('fence_coordinates')->nullable();
 
+            $table->string('fence_color')->default('#837083');
+
             $table->timestamps();
             $table->softDeletes();
 

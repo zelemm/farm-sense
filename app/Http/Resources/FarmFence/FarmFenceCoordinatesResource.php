@@ -19,6 +19,7 @@ class FarmFenceCoordinatesResource extends JsonResource
         return [
             'id' => $this->id,
             'farm_fence_id' => $this->farm_fence_id,
+            'fence_color' => $this->fence_color,
             'center_point' => $this->center_point,
             'fence_coordinates' => $this->fence_coordinates,
 

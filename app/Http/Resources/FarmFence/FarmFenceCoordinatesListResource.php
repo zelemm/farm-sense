@@ -20,6 +20,7 @@ class FarmFenceCoordinatesListResource extends JsonResource
             'id' => $this->id,
             'farm_fence_id' => $this->farm_fence_id,
             'center_point' => $this->center_point,
+            'fence_color' => $this->fence_color,
             'fence_coordinates' => $this->fence_coordinates,
             'updated_by_name' => $this->updated_by_name,
 

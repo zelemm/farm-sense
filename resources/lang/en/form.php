@@ -338,6 +338,8 @@ return [
         'update' => 'Update Fence Co-Ordinate',
         'updated' => 'Fence Co-Ordinate updated',
         'not_found' => 'No active Fence Co-Ordinate found',
+        'color_updated' => 'Fence Coordinate Color Updated',
+        'add_color' => 'Fence Coordinate Color'
     ],
 
     'cattle_location_lang' => [
@@ -375,5 +377,6 @@ return [
     'location_date' => 'Date',
     'center_point' => 'Center Point',
     'fence_coordinates' => 'Fence Coordinates',
+    'fence_color' => 'Fence Color',
 
 ];

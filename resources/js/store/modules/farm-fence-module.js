@@ -138,6 +138,22 @@ export default  {
       })
     },
 
+    updateCoordsColor({commit}, farmFenceForm) {
+      return new Promise((resolve, reject) => {
+
+        axios
+          .post(`/super_admin/farm_fence/coordinate/${farmFenceForm.get('id')}/fence_color`, farmFenceForm, {
+            // headers: { 'Content-Type': 'multipart/form-data' },
+          })
+          .then(res => {
+            resolve(res.data.data)
+          })
+          .catch(error => {
+            reject(error)
+          })
+      })
+    },
+
     deleteCoords({commit}, farmFenceId) {
       return new Promise((resolve, reject) => {
         axios.delete(`/super_admin/farm_fence/coordinate/${farmFenceId}`)

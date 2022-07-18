@@ -105,23 +105,24 @@
                         @restoreFenceItem="restoreFenceItem"
                         @showGoogle="adjustFarmFenceEdit"
                         @adjustFarmFence="adjustFarmFence"
+                        @openAddColorModal="openAddColorModal"
                       />
                     </div>
                   </div>
 
-<!--                  <template>-->
-<!--                    <div class="py-4">-->
-<!--                      <v-btn-->
-<!--                        color="primary"-->
-<!--                        dark-->
-<!--                        @click="handleGoogleFenceAdd()"-->
-<!--                      >-->
-<!--                        {{ 'form.farm_fence_lang.add_coordinate' | trans }}-->
-<!--                      </v-btn>-->
-<!--                    </div>-->
+                  <!--                  <template>-->
+                  <!--                    <div class="py-4">-->
+                  <!--                      <v-btn-->
+                  <!--                        color="primary"-->
+                  <!--                        dark-->
+                  <!--                        @click="handleGoogleFenceAdd()"-->
+                  <!--                      >-->
+                  <!--                        {{ 'form.farm_fence_lang.add_coordinate' | trans }}-->
+                  <!--                      </v-btn>-->
+                  <!--                    </div>-->
 
-<!--                    <div class="clearfix" />-->
-<!--                  </template>-->
+                  <!--                    <div class="clearfix" />-->
+                  <!--                  </template>-->
                 </v-tab-item>
               </v-tabs>
 
@@ -146,7 +147,7 @@
     <template v-if="farm_fence.id">
       <v-row justify="center">
         <v-dialog
-          v-model="isShowAddFenceModal"
+          v-model="isShowAddColorModal"
           max-width="1000"
         >
           <div class="card mb-0">
@@ -154,33 +155,22 @@
               class="close-dialog-icon"
               icon
               :title="lang.get('form.button.close')"
-              @click.native="isShowAddFenceModal = false"
+              @click.native="isShowAddColorModal = false"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
 
             <div class="card-body">
               <h5 class="card-title mt-0 mb-4 header-title">
-                {{ fenceData && fenceData.id ? 'form.button.update' : 'form.button.create' | trans }}
-                {{ 'menu.farm_fence_coords' | trans }}
+                {{ 'form.farm_fence_coords_lang.add_color' | trans }}
               </h5>
 
               <form @submit.stop.prevent="submit">
                 <v-row class="mt-4">
                   <v-col cols="12" md="6">
-                    <TextInput
-                      v-model="fenceData.latitude"
-                      :label="lang.get('form.latitude')"
-                      :errors="detailErrors.latitude"
-                      placeholder="(+/-)##.#########"
-                    />
-                  </v-col>
-                  <v-col cols="12" md="6">
-                    <TextInput
-                      v-model="fenceData.longitude"
-                      :label="lang.get('form.longitude')"
-                      :errors="detailErrors.longitude"
-                      placeholder="(+/-)##.#########"
+                    <v-color-picker v-model="farmFenceCoordinateColor"
+                                    :errors="farmFenceCoordinateColorError"
+                                    flat hide-mode-switch
                     />
                   </v-col>
                 </v-row>
@@ -190,7 +180,7 @@
                     color="primary"
                     class="btn-round"
                     :loading="loadingSaveDetail"
-                    @click.native="saveFenceDetail"
+                    @click.native="saveFenceCoordinateColor"
                   >
                     {{ 'form.button.save' | trans }}
                   </v-btn>
@@ -198,7 +188,7 @@
                     class="mr-2 text-none my-2 btn-round"
                     elevation-0
                     text
-                    @click.native="isShowAddFenceModal = false"
+                    @click.native="isShowAddColorModal = false"
                   >
                     {{ 'common.no_back' | trans }}
                   </v-btn>
@@ -300,8 +290,9 @@
 
             <v-card-text>
               <google-fence v-model="fenceCoordinatesComp" :location="fenceCoordinates"
-                            :locationCenter="fenceCoordinatesCenter"
-                            @saveFence="saveFence" />
+                            :location-center="fenceCoordinatesCenter"
+                            @saveFence="saveFence"
+              />
             </v-card-text>
           </v-card>
         </v-dialog>
@@ -349,20 +340,22 @@ export default {
       googleMap: {
 
       },
-        farmFenceCoordinateId: null,
-        fenceCoordinates:[
+    farmFenceCoordinateId: null,
+    farmFenceCoordinateColor: null,
+    farmFenceCoordinateColorError: null,
+    fenceCoordinates:[
 
-        ],
-        fenceCoordinatesComp:[
+    ],
+    fenceCoordinatesComp:[
 
-        ],
-        fenceCoordinatesCenter: {
+    ],
+    fenceCoordinatesCenter: {
 
-        },
+    },
       detailErrors: {},
       photoPreview: null,
       loadingSaveDetail: false,
-      isShowAddFenceModal: false,
+      isShowAddColorModal: false,
       isShowDeleteFenceModal: false,
       showGoogleMapDialog: false,
       showGoogleFenceDialog: false,
@@ -373,6 +366,7 @@ export default {
       return [
           { text: this.lang.get('form.heading.id'), value: 'id', sortable: false },
           { text: this.lang.get('form.center_point'), value: 'center_point', sortable: false },
+          { text: this.lang.get('form.fence_color'), value: 'fence_color', sortable: false },
           // { text: this.lang.get('form.fence_coordinates'), value: 'fence_coordinates', sortable: false },
           { text: this.lang.get('form.heading.updated_by'), value: 'updated_by_name', sortable: false },
           { text: this.lang.get('form.heading.created_at'), value: 'created_at', sortable: false },
@@ -589,6 +583,11 @@ export default {
       });
       this.loadingSaveDetail = false
     },
+    openAddColorModal(item){
+        this.farmFenceCoordinateId = item.id
+        this.isShowAddColorModal = true
+        this.farmFenceCoordinateColor = item.fence_color
+    },
     adjustFarmFenceEdit(items){
       this.adjustFarmFence(items, items.id)
     },
@@ -620,7 +619,40 @@ export default {
         }
         this.loadingSaveDetail = false
     },
+    saveFenceCoordinateColor: function (){
+        console.log(this.farmFenceCoordinateColor)
+        console.log(this.farmFenceCoordinateId)
+        console.log(this.farmFenceCoordinateColor)
+        if (!this.farmFenceCoordinateId || !this.farmFenceCoordinateColor) return
+        let _this = this
+        _this.loadingSaveDetail = true
+        _this.farmFenceCoordinateColorError = {}
+        let formData = new FormData()
+        formData.append('fence_color', this.farmFenceCoordinateColor)
 
+        if (_this.farmFenceCoordinateId) {
+            formData.append('id', _this.farmFenceCoordinateId)
+            formData.append('_method', 'PUT')
+        }
+
+        let url = 'farmFence/updateCoordsColor'
+        _this
+            .$store
+            .dispatch(url, formData)
+            .then(() => {
+                _this.loadingSaveDetail = false
+
+                _this.isShowAddColorModal = false
+                _this.$refs.coordinateTable.getDataFromApi()
+            })
+            .catch(err => {
+                _this.loadingSaveDetail = false
+
+                if (err.response && err.response.data && err.response.data.errors) {
+                    _this.farmFenceCoordinateColorError = err.response.data.errors
+                }
+            })
+    },
     saveFence: function (fenceCoordinatesComp, center){
       if (!fenceCoordinatesComp || fenceCoordinatesComp.length == 0) return
       let _this = this

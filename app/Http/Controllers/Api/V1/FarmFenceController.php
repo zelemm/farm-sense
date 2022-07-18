@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\FarmFence\CreateFarmFenceCoordsRequest;
 use App\Http\Requests\FarmFence\CreateFarmFenceRequest;
+use App\Http\Requests\FarmFence\UpdateFarmFenceCoordsColorRequest;
 use App\Http\Requests\FarmFence\UpdateFarmFenceCoordsRequest;
 use App\Http\Requests\FarmFence\UpdateFarmFenceRequest;
 use App\Http\Resources\FarmFence\FarmFenceCoordinatesResource;
@@ -80,6 +81,10 @@ class FarmFenceController extends Controller
         ], 200);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
         $farmGoogle = FarmFence::withTrashed()->findOrFail($id);
@@ -92,6 +97,10 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param CreateFarmFenceRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(CreateFarmFenceRequest $request)
     {
         $auth_user = Auth::user();
@@ -116,6 +125,11 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param UpdateFarmFenceRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(UpdateFarmFenceRequest $request, $id)
     {
         $farmFence = FarmFence::withTrashed()->find($id);
@@ -139,6 +153,10 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy($id)
     {
         $farmFence = FarmFence::withTrashed()->find($id);
@@ -154,6 +172,10 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function restore($id)
     {
         $farmFence = FarmFence::withTrashed()->find($id);
@@ -170,11 +192,20 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function coordinates($id){
         $farmFence = FarmFence::withTrashed()->find($id);
         return $this->farmFenceService->getCoOrdinates($farmFence, request()->all());
     }
 
+    /**
+     * @param $fencePlaces
+     * @param $center
+     * @return array
+     */
     public function formatPlacesWithCenter($fencePlaces, $center){
         $places = [];
         foreach($fencePlaces as $place) {
@@ -215,6 +246,10 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function showCoords($id)
     {
         $farmFenceCoords = FarmFenceCoordinates::withTrashed()->findOrFail($id);
@@ -227,6 +262,11 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param UpdateFarmFenceCoordsRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateCoords(UpdateFarmFenceCoordsRequest $request, $id)
     {
         $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
@@ -253,6 +293,39 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param UpdateFarmFenceCoordsRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateCoordsColor(UpdateFarmFenceCoordsColorRequest $request, $id)
+    {
+        $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
+
+        $auth_user = Auth::user();
+
+        // sync fence co-ordinate
+        if ($request->fence_color) {
+            $fenceCoords = [
+                'fence_color' => $request->fence_color,
+                'updated_by' => $auth_user->id,
+            ];
+            $farmFenceCoords->update($fenceCoords);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => __('form.farm_fence_coords_lang.color_updated'),
+            'data' => [
+                'farm_fence_coords' => $farmFenceCoords->id,
+            ]
+        ]);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroyCoords($id)
     {
         $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
@@ -267,6 +340,10 @@ class FarmFenceController extends Controller
         ]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function restoreCoords($id)
     {
         $farmFenceCoords = FarmFenceCoordinates::withTrashed()->find($id);
