@@ -98,7 +98,6 @@ export default {
   watch: {
     location: function(location){
       this.markers = [location]
-      // this.$refs.polygon.setOptions({fillColor: '#123431', strokeWeight: 6.0})
     },
     locationCenter: function(locationCenter){
       if(locationCenter && locationCenter.lat && locationCenter.lng){
@@ -117,7 +116,6 @@ export default {
           type: 'Polygon',
           coordinates: this.markers.map(path => closeLoop(path.map(({lat, lng}) => [lng, lat]))),
         }, null, 2)
-        // this.$refs.polygon.setOptions({fillColor: '#123431', strokeWeight: 6.0})
       }
     }, 1000),
   },
