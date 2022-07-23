@@ -6,6 +6,27 @@
                     @paths_changed="updateEdited($event)"
                     @rightclick="handleClickForDelete"
       />
+
+      <gmap-marker
+        v-if="farmPosition"
+        ref="farmLocation"
+        :key="farmPosition.id"
+        :position="farmCoords"
+        :clickable="true"
+        :draggable="false"
+        @click="center=farmCoords; openInfoWindowTemplate()"
+      />
+      <gmap-info-window
+        :options="{
+          maxWidth: 300,
+          pixelOffset: { width: 0, height: -35 }
+        }"
+        :position="infoWindow.position"
+        :opened="infoWindow.open"
+        @closeclick="infoWindow.open=false"
+      >
+        <div v-html="infoWindow.template" />
+      </gmap-info-window>
     </gmap-map>
     <div>
       <v-btn v-if="markers[0].length == 0" class="success" @click="addPath()">Add Path</v-btn>
@@ -34,6 +55,10 @@ export default {
   name: 'GoogleFence',
   components: {TextAreaInput},
   props: {
+    farm:{
+      Type: [Object, Array],
+      default: null,
+    },
     location: {
       Type: [Object, Array],
       default: null,
@@ -62,6 +87,11 @@ export default {
         open: false,
         template: '',
       },
+      farmCoords:{
+
+      },
+      farmName: '',
+      farmAddress: '',
       places: [],
       options: { strokeColor: this.fenceColor ? this.fenceColor : '#123123' },
     }
@@ -94,8 +124,19 @@ export default {
       }
       return this.center
     },
+    farmPosition: function(){
+      this.farmName = this.farm.name
+      this.farmAddress = this.farm.address
+      this.farmCoords = {lat: parseFloat(this.farm.lat), lng: parseFloat(this.farm.lng)}
+      return this.farmCoords
+    },
   },
   watch: {
+    farm: function(farm){
+      this.farmName = farm.name
+      this.farmAddress = farm.address
+      this.farmCoords = {lat: parseFloat(farm.lat), lng: parseFloat(farm.lng)}
+    },
     location: function(location){
       this.markers = [location]
     },
@@ -125,6 +166,11 @@ export default {
   },
 
   methods: {
+    openInfoWindowTemplate() {
+      this.infoWindow.position = this.farmCoords
+      this.infoWindow.template = `<div><h4 class="text-sm font-semibold">${this.farmName}</h4><p class="text-xs mb-0 mt-2">${this.farmAddress}</p></div>`
+      this.infoWindow.open = true
+    },
     geolocate: function() {
       let path = []
       // let firstPath = null

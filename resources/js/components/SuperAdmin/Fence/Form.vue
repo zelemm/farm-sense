@@ -291,6 +291,7 @@
             <v-card-text>
               <google-fence v-model="fenceCoordinatesComp" :location="fenceCoordinates"
                             :location-center="fenceCoordinatesCenter" :fence-color="farmFenceCoordinateColor"
+                            :farm="farm_fence.farm"
                             @saveFence="saveFence"
               />
             </v-card-text>
