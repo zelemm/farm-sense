@@ -22,6 +22,7 @@
         "laravel/ui": "^3.4",
         "laravie/parser": "^2.1",
         "mariuzzo/laravel-js-localization": "^1.9",
+        "markrogoyski/math-php": "^2.6",
         "mjaschen/phpgeo": "^4.0",
         "reinink/remember-query-strings": "^0.1.0",
         "tightenco/ziggy": "^1.4"
